@@ -1,0 +1,79 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="源文件">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="源文件\utils">
+      <UniqueIdentifier>{f2b9550a-b104-41ae-8e5f-320b70f38d92}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\utils\console">
+      <UniqueIdentifier>{73769a59-310d-4323-a896-8c07a9d2157f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\lua">
+      <UniqueIdentifier>{a76d92e8-9679-4988-a337-a2706cd82441}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\config">
+      <UniqueIdentifier>{5c04e561-5a12-4abe-aa4f-c9306d3dca8e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\json">
+      <UniqueIdentifier>{f45bdbde-1253-4e22-8889-8d94b2bbcaa3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\imgui">
+      <UniqueIdentifier>{945f1af6-8543-4105-822e-42f531f4a8dd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\sdk">
+      <UniqueIdentifier>{8bb5f1a2-3c74-48bc-92c2-90c351271c85}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\features">
+      <UniqueIdentifier>{2ce37699-2b60-49ee-91ea-0bd77bf5e271}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="dllmain.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="utils\console\console.cpp">
+      <Filter>源文件\utils\console</Filter>
+    </ClCompile>
+    <ClCompile Include="lua\Clua.cpp">
+      <Filter>源文件\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="lua\CLuaHook.cpp">
+      <Filter>源文件\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="config\config.cpp">
+      <Filter>源文件\config</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="utils\KeyState.h">
+      <Filter>源文件\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\console\console.h">
+      <Filter>源文件\utils\console</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\Singleton.h">
+      <Filter>源文件\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="lua\includes.h">
+      <Filter>源文件\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="lua\Clua.h">
+      <Filter>源文件\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="lua\CLuaHook.h">
+      <Filter>源文件\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="json\json.h">
+      <Filter>源文件\json</Filter>
+    </ClInclude>
+    <ClInclude Include="json\json-forwards.h">
+      <Filter>源文件\json</Filter>
+    </ClInclude>
+    <ClInclude Include="config\config.h">
+      <Filter>源文件\config</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
