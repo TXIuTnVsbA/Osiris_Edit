@@ -17,17 +17,41 @@
     <Filter Include="源文件\config">
       <UniqueIdentifier>{5c04e561-5a12-4abe-aa4f-c9306d3dca8e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="源文件\json">
-      <UniqueIdentifier>{f45bdbde-1253-4e22-8889-8d94b2bbcaa3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="源文件\imgui">
-      <UniqueIdentifier>{945f1af6-8543-4105-822e-42f531f4a8dd}</UniqueIdentifier>
-    </Filter>
     <Filter Include="源文件\sdk">
       <UniqueIdentifier>{8bb5f1a2-3c74-48bc-92c2-90c351271c85}</UniqueIdentifier>
     </Filter>
     <Filter Include="源文件\features">
       <UniqueIdentifier>{2ce37699-2b60-49ee-91ea-0bd77bf5e271}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\gui">
+      <UniqueIdentifier>{7aa8311f-f21c-4f18-b5dc-89050cc8c983}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\utils\json">
+      <UniqueIdentifier>{f58d2744-2489-411a-aa3e-8ce54fa63393}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\gui\imgui">
+      <UniqueIdentifier>{75d207d0-008c-4921-8975-c39faf29d114}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\sdk\interfaces">
+      <UniqueIdentifier>{e5ebe826-677e-4efa-9a25-fed7bd90204f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\sdk\utils">
+      <UniqueIdentifier>{60594d73-3c79-4f97-9d02-514526bc1001}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\sdk\utils\hooks">
+      <UniqueIdentifier>{2681eace-f687-47be-a587-c05753e1017a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\sdk\utils\interfaces">
+      <UniqueIdentifier>{1fa80972-1295-4e82-b515-9b7602b91bd6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\sdk\utils\memory">
+      <UniqueIdentifier>{9911a13f-f3ed-4664-a80a-97e3ad7ab454}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\sdk\utils\netvars">
+      <UniqueIdentifier>{db1db690-cac0-41cc-a082-28f29955191b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\sdk\utils\nSkinz">
+      <UniqueIdentifier>{d28b7365-522a-42b9-a241-1270d630168a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -45,6 +69,27 @@
     </ClCompile>
     <ClCompile Include="config\config.cpp">
       <Filter>源文件\config</Filter>
+    </ClCompile>
+    <ClCompile Include="gui\imgui\imgui.cpp">
+      <Filter>源文件\gui\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="gui\imgui\imgui_demo.cpp">
+      <Filter>源文件\gui\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="gui\imgui\imgui_draw.cpp">
+      <Filter>源文件\gui\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="gui\imgui\imgui_impl_dx9.cpp">
+      <Filter>源文件\gui\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="gui\imgui\imgui_impl_win32.cpp">
+      <Filter>源文件\gui\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="gui\imgui\imgui_stdlib.cpp">
+      <Filter>源文件\gui\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="gui\imgui\imgui_widgets.cpp">
+      <Filter>源文件\gui\imgui</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -66,14 +111,41 @@
     <ClInclude Include="lua\CLuaHook.h">
       <Filter>源文件\lua</Filter>
     </ClInclude>
-    <ClInclude Include="json\json.h">
-      <Filter>源文件\json</Filter>
-    </ClInclude>
-    <ClInclude Include="json\json-forwards.h">
-      <Filter>源文件\json</Filter>
-    </ClInclude>
     <ClInclude Include="config\config.h">
       <Filter>源文件\config</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\json\json.h">
+      <Filter>源文件\utils\json</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\json\json-forwards.h">
+      <Filter>源文件\utils\json</Filter>
+    </ClInclude>
+    <ClInclude Include="gui\imgui\imconfig.h">
+      <Filter>源文件\gui\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="gui\imgui\imgui.h">
+      <Filter>源文件\gui\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="gui\imgui\imgui_impl_dx9.h">
+      <Filter>源文件\gui\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="gui\imgui\imgui_impl_win32.h">
+      <Filter>源文件\gui\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="gui\imgui\imgui_internal.h">
+      <Filter>源文件\gui\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="gui\imgui\imgui_stdlib.h">
+      <Filter>源文件\gui\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="gui\imgui\imstb_rectpack.h">
+      <Filter>源文件\gui\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="gui\imgui\imstb_textedit.h">
+      <Filter>源文件\gui\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="gui\imgui\imstb_truetype.h">
+      <Filter>源文件\gui\imgui</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

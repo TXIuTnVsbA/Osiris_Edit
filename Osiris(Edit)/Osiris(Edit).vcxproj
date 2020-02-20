@@ -163,18 +163,34 @@
   <ItemGroup>
     <ClCompile Include="config\config.cpp" />
     <ClCompile Include="dllmain.cpp" />
+    <ClCompile Include="gui\imgui\imgui.cpp" />
+    <ClCompile Include="gui\imgui\imgui_demo.cpp" />
+    <ClCompile Include="gui\imgui\imgui_draw.cpp" />
+    <ClCompile Include="gui\imgui\imgui_impl_dx9.cpp" />
+    <ClCompile Include="gui\imgui\imgui_impl_win32.cpp" />
+    <ClCompile Include="gui\imgui\imgui_stdlib.cpp" />
+    <ClCompile Include="gui\imgui\imgui_widgets.cpp" />
     <ClCompile Include="lua\Clua.cpp" />
     <ClCompile Include="lua\CLuaHook.cpp" />
     <ClCompile Include="utils\console\console.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="config\config.h" />
-    <ClInclude Include="json\json-forwards.h" />
-    <ClInclude Include="json\json.h" />
+    <ClInclude Include="gui\imgui\imconfig.h" />
+    <ClInclude Include="gui\imgui\imgui.h" />
+    <ClInclude Include="gui\imgui\imgui_impl_dx9.h" />
+    <ClInclude Include="gui\imgui\imgui_impl_win32.h" />
+    <ClInclude Include="gui\imgui\imgui_internal.h" />
+    <ClInclude Include="gui\imgui\imgui_stdlib.h" />
+    <ClInclude Include="gui\imgui\imstb_rectpack.h" />
+    <ClInclude Include="gui\imgui\imstb_textedit.h" />
+    <ClInclude Include="gui\imgui\imstb_truetype.h" />
     <ClInclude Include="lua\Clua.h" />
     <ClInclude Include="lua\CLuaHook.h" />
     <ClInclude Include="lua\includes.h" />
     <ClInclude Include="utils\console\console.h" />
+    <ClInclude Include="utils\json\json-forwards.h" />
+    <ClInclude Include="utils\json\json.h" />
     <ClInclude Include="utils\KeyState.h" />
     <ClInclude Include="utils\Singleton.h" />
   </ItemGroup>
