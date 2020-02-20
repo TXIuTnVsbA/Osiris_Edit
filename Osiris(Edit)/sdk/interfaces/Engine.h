@@ -26,6 +26,10 @@ class NetworkChannel;
 
 class Engine {
 public:
+    constexpr auto clientCmd(const char* cmd) noexcept
+    {
+        callVirtualMethod<void, const char*>(this, 7, cmd);
+    }
     constexpr auto getPlayerInfo(int entityIndex, const PlayerInfo& playerInfo) noexcept
     {
         return callVirtualMethod<bool, int, const PlayerInfo&>(this, 8, entityIndex, playerInfo);

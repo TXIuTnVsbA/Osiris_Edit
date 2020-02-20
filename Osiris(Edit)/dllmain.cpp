@@ -4,6 +4,7 @@
 #include "lua/includes.h"
 #include "utils/console/console.h"
 #include "config/config.h"
+#include "gui/gui.h"
 #include "sdk/utils/hooks/hooks.h"
 #include "sdk/utils/interfaces/interfaces.h"
 #include "sdk/utils/memory/memory.h"
@@ -27,7 +28,7 @@ void init() {
 
 	g_config.init();
 	g_interfaces.init();
-	//g_gui.init();
+	g_gui.init();
 	g_memory.init();
 	g_netvars.init();
 	g_hooks.init();

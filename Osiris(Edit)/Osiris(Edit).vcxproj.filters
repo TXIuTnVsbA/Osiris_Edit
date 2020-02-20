@@ -106,6 +106,9 @@
     <ClCompile Include="sdk\utils\hooks\hooks.cpp">
       <Filter>源文件\sdk\utils\hooks</Filter>
     </ClCompile>
+    <ClCompile Include="gui\gui.cpp">
+      <Filter>源文件\gui</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="utils\KeyState.h">
@@ -308,6 +311,9 @@
     </ClInclude>
     <ClInclude Include="sdk\utils\netvars\fnv.h">
       <Filter>源文件\sdk\utils\netvars</Filter>
+    </ClInclude>
+    <ClInclude Include="gui\gui.h">
+      <Filter>源文件\gui</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -14,8 +14,22 @@ public:
 	std::unordered_map<std::string, std::unordered_map<int, int>> m_i;
 	std::unordered_map<std::string, std::unordered_map<int, float>> m_f;
 	std::unordered_map<std::string, std::unordered_map<int, float[4]>> m_c;
-    std::filesystem::path get_path();
-	void init();
+
+	void init() noexcept;
+    void load(size_t) noexcept;
+    void save(size_t) const noexcept;
+    void add(const char*) noexcept;
+    void remove(size_t) noexcept;
+    void rename(size_t, const char*) noexcept;
+    void reset() noexcept;
+    void refresh() noexcept;
+
+    constexpr auto& getConfigs() noexcept
+    {
+        return configs;
+    }
+
+    std::filesystem::path get_path() noexcept;
 private:
     std::filesystem::path _path;
     std::filesystem::path path;
