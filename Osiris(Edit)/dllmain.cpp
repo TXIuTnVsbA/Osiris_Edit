@@ -4,7 +4,12 @@
 #include "lua/includes.h"
 #include "utils/console/console.h"
 #include "config/config.h"
+#include "sdk/utils/hooks/hooks.h"
+#include "sdk/utils/interfaces/interfaces.h"
+#include "sdk/utils/memory/memory.h"
+#include "sdk/utils/netvars/netvars.h"
 
+#include "sdk/interfaces/GameUI.h"
 void init() {
 #ifdef _DEBUG
 	if (!g_console.allocate("Debug"))
@@ -19,11 +24,13 @@ void init() {
 #endif
 
 	lua::init_state();
+
 	g_config.init();
-	//interfaces
-	//memory
-	//netvars
-	//hooks
+	g_interfaces.init();
+	//g_gui.init();
+	g_memory.init();
+	g_netvars.init();
+	g_hooks.init();
 	lua::init_command();
 }
 
@@ -42,6 +49,9 @@ void load() {
 
 		}
 	}
+	
+	g_hooks.hook();
+	g_interfaces.gameUI->messageBox("Osiris", "Loaded");
 }
 
 void unload() {
@@ -61,8 +71,10 @@ void unload() {
 	g_console.detach();
 #else
 #endif
+	g_hooks.restore();
+	g_netvars.restore();
 	lua::unload();
-
+	g_interfaces.gameUI->messageBox("Osiris", "Unloaded");
 }
 
 void wait() {

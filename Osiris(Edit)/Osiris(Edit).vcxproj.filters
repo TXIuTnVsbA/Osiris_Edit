@@ -91,6 +91,21 @@
     <ClCompile Include="gui\imgui\imgui_widgets.cpp">
       <Filter>源文件\gui\imgui</Filter>
     </ClCompile>
+    <ClCompile Include="sdk\interfaces\GlobalVars.cpp">
+      <Filter>源文件\sdk\interfaces</Filter>
+    </ClCompile>
+    <ClCompile Include="sdk\utils\interfaces\interfaces.cpp">
+      <Filter>源文件\sdk\utils\interfaces</Filter>
+    </ClCompile>
+    <ClCompile Include="sdk\utils\memory\memory.cpp">
+      <Filter>源文件\sdk\utils\memory</Filter>
+    </ClCompile>
+    <ClCompile Include="sdk\utils\netvars\netvars.cpp">
+      <Filter>源文件\sdk\utils\netvars</Filter>
+    </ClCompile>
+    <ClCompile Include="sdk\utils\hooks\hooks.cpp">
+      <Filter>源文件\sdk\utils\hooks</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="utils\KeyState.h">
@@ -146,6 +161,153 @@
     </ClInclude>
     <ClInclude Include="gui\imgui\imstb_truetype.h">
       <Filter>源文件\gui\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="sdk\interfaces\AnimState.h">
+      <Filter>源文件\sdk\interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="sdk\interfaces\ClassId.h">
+      <Filter>源文件\sdk\interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="sdk\interfaces\Client.h">
+      <Filter>源文件\sdk\interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="sdk\interfaces\ClientClass.h">
+      <Filter>源文件\sdk\interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="sdk\interfaces\ConVar.h">
+      <Filter>源文件\sdk\interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="sdk\interfaces\Cvar.h">
+      <Filter>源文件\sdk\interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="sdk\interfaces\Engine.h">
+      <Filter>源文件\sdk\interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="sdk\interfaces\EngineTrace.h">
+      <Filter>源文件\sdk\interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="sdk\interfaces\Entity.h">
+      <Filter>源文件\sdk\interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="sdk\interfaces\EntityList.h">
+      <Filter>源文件\sdk\interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="sdk\interfaces\FrameStage.h">
+      <Filter>源文件\sdk\interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="sdk\interfaces\GameEvent.h">
+      <Filter>源文件\sdk\interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="sdk\interfaces\GameMovement.h">
+      <Filter>源文件\sdk\interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="sdk\interfaces\GameUI.h">
+      <Filter>源文件\sdk\interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="sdk\interfaces\GlobalVars.h">
+      <Filter>源文件\sdk\interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="sdk\interfaces\GlowObjectManager.h">
+      <Filter>源文件\sdk\interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="sdk\interfaces\Input.h">
+      <Filter>源文件\sdk\interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="sdk\interfaces\InputSystem.h">
+      <Filter>源文件\sdk\interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="sdk\interfaces\ItemSchema.h">
+      <Filter>源文件\sdk\interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="sdk\interfaces\Localize.h">
+      <Filter>源文件\sdk\interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="sdk\interfaces\Material.h">
+      <Filter>源文件\sdk\interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="sdk\interfaces\MaterialSystem.h">
+      <Filter>源文件\sdk\interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="sdk\interfaces\matrix3x4.h">
+      <Filter>源文件\sdk\interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="sdk\interfaces\ModelInfo.h">
+      <Filter>源文件\sdk\interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="sdk\interfaces\ModelRender.h">
+      <Filter>源文件\sdk\interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="sdk\interfaces\MoveHelper.h">
+      <Filter>源文件\sdk\interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="sdk\interfaces\NetworkChannel.h">
+      <Filter>源文件\sdk\interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="sdk\interfaces\Panel.h">
+      <Filter>源文件\sdk\interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="sdk\interfaces\PhysicsSurfaceProps.h">
+      <Filter>源文件\sdk\interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="sdk\interfaces\Prediction.h">
+      <Filter>源文件\sdk\interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="sdk\interfaces\Recv.h">
+      <Filter>源文件\sdk\interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="sdk\interfaces\RenderContext.h">
+      <Filter>源文件\sdk\interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="sdk\interfaces\RenderView.h">
+      <Filter>源文件\sdk\interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="sdk\interfaces\ResourceAccessControl.h">
+      <Filter>源文件\sdk\interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="sdk\interfaces\SoundEmitter.h">
+      <Filter>源文件\sdk\interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="sdk\interfaces\SoundInfo.h">
+      <Filter>源文件\sdk\interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="sdk\interfaces\Surface.h">
+      <Filter>源文件\sdk\interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="sdk\interfaces\UserCmd.h">
+      <Filter>源文件\sdk\interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="sdk\interfaces\Utils.h">
+      <Filter>源文件\sdk\interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="sdk\interfaces\UtlVector.h">
+      <Filter>源文件\sdk\interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="sdk\interfaces\VarMapping.h">
+      <Filter>源文件\sdk\interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="sdk\interfaces\Vector.h">
+      <Filter>源文件\sdk\interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="sdk\interfaces\WeaponData.h">
+      <Filter>源文件\sdk\interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="sdk\interfaces\WeaponId.h">
+      <Filter>源文件\sdk\interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="sdk\utils\interfaces\interfaces.h">
+      <Filter>源文件\sdk\utils\interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="sdk\utils\memory\memory.h">
+      <Filter>源文件\sdk\utils\memory</Filter>
+    </ClInclude>
+    <ClInclude Include="sdk\utils\netvars\netvars.h">
+      <Filter>源文件\sdk\utils\netvars</Filter>
+    </ClInclude>
+    <ClInclude Include="sdk\utils\hooks\hooks.h">
+      <Filter>源文件\sdk\utils\hooks</Filter>
+    </ClInclude>
+    <ClInclude Include="sdk\utils\netvars\fnv.h">
+      <Filter>源文件\sdk\utils\netvars</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
