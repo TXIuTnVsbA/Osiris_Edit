@@ -10,10 +10,11 @@ public:
 	std::unordered_map<std::string, int> i;
 	std::unordered_map<std::string, float> f;
 	std::unordered_map<std::string, float[4]> c;
+    std::unordered_map<std::string, std::string> s;
 	std::unordered_map<std::string, std::unordered_map<int, bool>> m_b;
 	std::unordered_map<std::string, std::unordered_map<int, int>> m_i;
 	std::unordered_map<std::string, std::unordered_map<int, float>> m_f;
-	std::unordered_map<std::string, std::unordered_map<int, float[4]>> m_c;
+    std::unordered_map<std::string, std::unordered_map<int, std::string>> m_s;
 
 	void init() noexcept;
     void load(size_t) noexcept;

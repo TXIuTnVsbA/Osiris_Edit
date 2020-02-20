@@ -12,7 +12,140 @@ namespace lua {
 	std::vector<std::string> scripts;
 	std::vector<std::filesystem::path> pathes;
 	std::map<std::string, std::map<std::string, std::vector<MenuItem_t>>> menu_items = {};
-	
+	namespace ns_client {
+		void set_event_callback(sol::this_state s, std::string eventname, sol::function func) {
+			sol::state_view lua_state(s);
+			sol::table rs = lua_state["debug"]["getinfo"](2, ("S"));
+			std::string source = rs["source"];
+			std::string filename = std::filesystem::path(source.substr(1)).filename().string();
+
+			hooks->registerHook(eventname, get_script_id(filename), func);
+
+			g_console.log("%s: subscribed to event %s", filename.c_str(), eventname.c_str());
+		}
+
+		void run_script(std::string scriptname) {
+			load_script(get_script_id(scriptname));
+		}
+
+		void reload_active_scripts() {
+			reload_all_scripts();
+		}
+
+		void refresh() {
+			unload_all_scripts();
+			refresh_scripts();
+			load_script(get_script_id("autorun.lua"));
+		}
+	};
+	namespace ns_config {
+		/*
+		config.get(key)
+		Returns value of given key or nil if key not found.
+		*/
+		std::tuple<sol::object, sol::object, sol::object, sol::object> get(sol::this_state s, std::string key) {
+			std::tuple<sol::object, sol::object, sol::object, sol::object> retn = std::make_tuple(sol::nil, sol::nil, sol::nil, sol::nil);
+
+			for (auto kv : g_config.b)
+				if (kv.first == key)
+					retn = std::make_tuple(sol::make_object(s, kv.second), sol::nil, sol::nil, sol::nil);
+
+			for (auto kv : g_config.c)
+				if (kv.first == key)
+					retn = std::make_tuple(sol::make_object(s, (int)(kv.second[0] * 255)), sol::make_object(s, (int)(kv.second[1] * 255)), sol::make_object(s, (int)(kv.second[2] * 255)), sol::make_object(s, (int)(kv.second[3] * 255)));
+
+			for (auto kv : g_config.f)
+				if (kv.first == key)
+					retn = std::make_tuple(sol::make_object(s, kv.second), sol::nil, sol::nil, sol::nil);
+
+			
+			for (auto kv : g_config.i)
+				if (kv.first == key)
+					retn = std::make_tuple(sol::make_object(s, kv.second), sol::nil, sol::nil, sol::nil);
+
+			for (auto kv : g_config.s)
+				if (kv.first == key)
+					retn = std::make_tuple(sol::make_object(s, kv.second), sol::nil, sol::nil, sol::nil);
+
+			for (auto kv : g_config.m_b)
+				if (kv.first == key)
+					retn = std::make_tuple(sol::make_object(s, kv.second), sol::nil, sol::nil, sol::nil);
+			
+			for (auto kv : g_config.m_f)
+				if (kv.first == key)
+					retn = std::make_tuple(sol::make_object(s, kv.second), sol::nil, sol::nil, sol::nil);
+
+			for (auto kv : g_config.m_i)
+				if (kv.first == key)
+					retn = std::make_tuple(sol::make_object(s, kv.second), sol::nil, sol::nil, sol::nil);
+
+			for (auto kv : g_config.m_s)
+				if (kv.first == key)
+					retn = std::make_tuple(sol::make_object(s, kv.second), sol::nil, sol::nil, sol::nil);
+			
+			return retn;
+		}
+
+		/*
+		config.set(key, value)
+		Sets value for key
+		*/
+		void set_bool(std::string key, bool v) {
+			g_config.b[key] = v;
+		}
+
+		void set_string(std::string key, std::string v) {
+			g_config.s[key] = v;
+		}
+
+		void set_float(std::string key, float v) {
+			if (ceilf(v) != v)
+				g_config.f[key] = v;
+			else
+				g_config.i[key] = (int)v;
+		}
+
+		void set_color(std::string key, int r, int g, int b, int a) {
+			g_config.c[key][0] = r / 255.f;
+			g_config.c[key][1] = g / 255.f;
+			g_config.c[key][2] = b / 255.f;
+			g_config.c[key][3] = a / 255.f;
+		}
+
+		void set_multi_select(std::string key, int pos, bool v) {
+			g_config.m_b[key][pos] = v;
+		}
+
+		void set_multi_string(std::string key, int pos, std::string v) {
+			g_config.m_s[key][pos] = v;
+		}
+
+		void set_multi_number(std::string key, int pos, float v) {
+			if (ceilf(v) != v)
+				g_config.m_f[key][pos] = v;
+			else
+				g_config.m_i[key][pos] = (int)v;
+
+		}
+
+		/*
+		config.load()
+		Loads selected config
+		*/
+		//void load() {
+			//g_config.load();
+		//}
+
+		/*
+		config.save()
+		Saves selected config
+
+		*/
+		//void save() {
+			//g_config.save();
+		//}
+	};
+
 	void test_func() {
 		g_console.log("RunTestFunc");
 		for (auto hk : hooks->getHooks("on_test"))
@@ -27,7 +160,7 @@ namespace lua {
 			}
 		}
 	}
-	
+
 	void init_state() {
 #ifdef _DEBUG
 		lua_writestring(LUA_COPYRIGHT, strlen(LUA_COPYRIGHT));
@@ -42,6 +175,26 @@ namespace lua {
 		sol::state_view lua_state(g_lua_state);
 		lua_state["exit"] = []() { g_unload_flag = true; };
 		lua_state["test_func"] = []() { test_func(); };
+
+		auto config = lua_state.create_table();
+		config["get"] = ns_config::get;
+		config["set"] = sol::overload(
+			ns_config::set_bool, 
+			ns_config::set_color, 
+			ns_config::set_float, 
+			ns_config::set_string, 
+			ns_config::set_multi_select, 
+			ns_config::set_multi_number, 
+			ns_config::set_multi_string
+		);
+		lua_state["config"] = config;
+
+		auto client = lua_state.create_table();
+		client["set_event_callback"] = ns_client::set_event_callback;
+		client["run_script"] = ns_client::run_script;
+		client["reload_active_scripts"] = ns_client::reload_active_scripts;
+		client["refresh"] = ns_client::refresh;
+		lua_state["client"] = client;
 
 		refresh_scripts();
 		load_script(get_script_id("autorun.lua"));

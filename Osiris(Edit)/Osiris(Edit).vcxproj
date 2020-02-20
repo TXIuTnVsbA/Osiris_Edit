@@ -179,6 +179,7 @@
     <ClCompile Include="sdk\utils\memory\memory.cpp" />
     <ClCompile Include="sdk\utils\netvars\netvars.cpp" />
     <ClCompile Include="utils\console\console.cpp" />
+    <ClCompile Include="utils\json\jsoncpp.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="config\config.h" />

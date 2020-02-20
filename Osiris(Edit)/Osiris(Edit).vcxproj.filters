@@ -109,6 +109,9 @@
     <ClCompile Include="gui\gui.cpp">
       <Filter>源文件\gui</Filter>
     </ClCompile>
+    <ClCompile Include="utils\json\jsoncpp.cpp">
+      <Filter>源文件\utils\json</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="utils\KeyState.h">
