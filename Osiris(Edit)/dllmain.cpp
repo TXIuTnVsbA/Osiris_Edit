@@ -27,6 +27,7 @@ void init() {
 	lua::init_state();
 
 	g_config.init();
+	g_config.default();
 	g_interfaces.init();
 	g_gui.init();
 	g_memory.init();

@@ -70,10 +70,10 @@ public:
         }
     }
 
-    constexpr bool setupBones(matrix3x4* out, int maxBones, int boneMask, float currentTime) noexcept
+    constexpr bool setupBones(matrix3x4* out, int maxBones, int boneMask, float currentTime,bool fixBoneMatrix =false) noexcept
     {
-        /*
-        if (config.misc.fixBoneMatrix) {
+        
+        if (fixBoneMatrix) {
             int* render = reinterpret_cast<int*>(this + 0x274);
             int backup = *render;
             Vector absOrigin = getAbsOrigin();
@@ -84,7 +84,7 @@ public:
             *render = backup;
             return result;
         }
-        */
+        
         return callVirtualMethod<bool, matrix3x4*, int, int, float>(this + 4, 13, out, maxBones, boneMask, currentTime);
     }
 

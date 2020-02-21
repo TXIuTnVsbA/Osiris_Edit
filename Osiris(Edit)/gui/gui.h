@@ -14,12 +14,14 @@ private:
 	//void renderMiscWindow() noexcept;
 	void renderConfigWindow() noexcept;
 	//void renderSkinChangerWindow() noexcept;
+	void renderLuaWindow() noexcept;
 
-	struct {
+	//struct {
 		//bool misc{ false };
-		bool config{ false };
+		//bool config{ false };
 		//bool skinChanger{ false };
-	} window;
+		//bool lua{ false };
+	//} window;
 
 
 	struct {

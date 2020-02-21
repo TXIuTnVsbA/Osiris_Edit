@@ -15,66 +15,114 @@
 #include "../sdk/utils/memory/memory.h"
 #include "../sdk/utils/netvars/netvars.h"
 
+#include "../lua/Clua.h"
+
 c_gui g_gui;
 constexpr auto windowFlags = ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize
 | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse;
+
+void dmt(std::string key) {
+	if (GET_BOOL["lua_devmode"] && ImGui::IsItemHovered()) {
+		ImGui::BeginTooltip();
+		ImGui::Text(key.c_str());
+		ImGui::EndTooltip();
+	}
+}
+
+void draw_lua_items(std::string tab, std::string container) {
+	for (auto i : lua::menu_items[tab][container]) {
+		if (!i.is_visible)
+			continue;
+
+		auto type = i.type;
+		switch (type)
+		{
+		case lua::MENUITEM_CHECKBOX:
+			if (ImGui::Checkbox(i.label.c_str(), &(GET_BOOL[i.key]))) {
+				if (i.callback != sol::nil)
+					i.callback(GET_BOOL[i.key]);
+			}
+
+			dmt(i.key);
+			break;
+		case lua::MENUITEM_SLIDERINT:
+			if (ImGui::SliderInt(i.label.c_str(), &(GET_INT[i.key]), i.i_min, i.i_max, i.format.c_str())) {
+				if (i.callback != sol::nil)
+					i.callback(GET_INT[i.key]);
+			}
+
+			dmt(i.key);
+			break;
+		case lua::MENUITEM_SLIDERFLOAT:
+			if (ImGui::SliderFloat(i.label.c_str(), &(GET_FLOAT[i.key]), i.f_min, i.f_max, i.format.c_str())) {
+				if (i.callback != sol::nil)
+					i.callback(GET_FLOAT[i.key]);
+			}
+
+			dmt(i.key);
+			break;
+			/*
+		case lua::MENUITEM_KEYBIND:
+			if (ImGui::Keybind(i.label.c_str(), &cfg->i[i.key], i.allow_style_change ? &cfg->i[i.key + "style"] : NULL)) {
+				if (i.callback != sol::nil)
+					i.callback(cfg->i[i.key], cfg->i[i.key + "style"]);
+			}
+
+			dmt(i.key + (i.allow_style_change ? " | " + i.key + "style" : ""));
+			break;
+			*/
+		case lua::MENUITEM_TEXT:
+			ImGui::Text(i.label.c_str());
+			break;
+
+			/*
+		case lua::MENUITEM_SINGLESELECT:
+			if (ImGui::SingleSelect(i.label.c_str(), &cfg->i[i.key], i.items)) {
+				if (i.callback != sol::nil)
+					i.callback(cfg->i[i.key]);
+			}
+
+			dmt(i.key);
+			break;
+
+		case lua::MENUITEM_MULTISELECT:
+			if (ImGui::MultiSelect(i.label.c_str(), &cfg->m[i.key], i.items)) {
+				if (i.callback != sol::nil)
+					i.callback(cfg->m[i.key]);
+			}
+
+			dmt(i.key);
+			break;
+			*/
+		case lua::MENUITEM_COLORPICKER:
+			if (ImGui::ColorEdit4(i.label.c_str(), GET_COLOR[i.key])) {
+				if (i.callback != sol::nil)
+					i.callback(GET_COLOR[i.key][0] * 255, GET_COLOR[i.key][1] * 255, GET_COLOR[i.key][2] * 255, GET_COLOR[i.key][3] * 255);
+			}
+
+			dmt(i.key);
+			break;
+		case lua::MENUITEM_BUTTON:
+			if (ImGui::Button(i.label.c_str())) {
+				if (i.callback != sol::nil)
+					i.callback();
+			}
+			break;
+		default:
+			break;
+		}
+	}
+}
+
 void c_gui::init() noexcept {
 	ImGui::CreateContext();
 	ImGui_ImplWin32_Init(FindWindowW(L"Valve001", NULL));
 
-	//ImGui::StyleColorsDark();
+	ImGui::StyleColorsDark();
 	ImGuiStyle& style = ImGui::GetStyle();
 
-	//style.ScrollbarSize = 9.0f;
-	style.WindowMinSize = ImVec2(30, 30);
-	style.FramePadding = ImVec2(4, 3);
-	style.ItemSpacing = ImVec2(8, 4);
-	style.Alpha = 1.f;
-	style.WindowRounding = 0.0f;
-	style.IndentSpacing = 6.0f;
-	style.ItemInnerSpacing = ImVec2(3, 4);
-	style.ColumnsMinSpacing = 50.0f;
-	style.GrabMinSize = 14.0f;
-	style.GrabRounding = 16.0f;
-	style.ScrollbarSize = 2.0f;
-	style.ScrollbarRounding = 0.0f;
-	style.AntiAliasedLines = true;
-	style.WindowTitleAlign = ImVec2(0.5, 0.5);
-	style.FrameRounding = 5.f;
-	style.ChildRounding = 0.f;
-
-	style.WindowRounding = 0.f;
-	style.FramePadding = ImVec2(4, 1);
-	style.ScrollbarSize = 10.f;
-	style.ScrollbarRounding = 0.f;
-	style.GrabMinSize = 5.f;
-
-	style.Colors[ImGuiCol_Text] = ImVec4(0.78f, 0.78f, 0.78f, 1.00f);
-	style.Colors[ImGuiCol_TextDisabled] = ImVec4(0.59f, 0.59f, 0.59f, 1.00f);
-	style.Colors[ImGuiCol_WindowBg] = ImVec4(0.045f, 0.045f, 0.045f, 1.00f);
-	//style.Colors[ImGuiCol_ChildWindowBg] = ImVec4(0.11f, 0.11f, 0.11f, 0.00f);
-	style.Colors[ImGuiCol_Border] = ImVec4(0.07f, 0.07f, 0.07f, 1.00f);
-	style.Colors[ImGuiCol_FrameBg] = ImVec4(0.80f, 0.80f, 0.80f, 0.09f);
-	style.Colors[ImGuiCol_FrameBgHovered] = ImVec4(0.39f, 0.39f, 0.39f, 1.00f);
-	style.Colors[ImGuiCol_FrameBgActive] = ImVec4(0.04f, 0.04f, 0.04f, 0.88f);
-	style.Colors[ImGuiCol_TitleBg] = ImVec4(0.00f, 0.00f, 0.00f, 1.00f);
-	style.Colors[ImGuiCol_TitleBgCollapsed] = ImVec4(0.00f, 0.00f, 0.00f, 0.20f);
-	style.Colors[ImGuiCol_TitleBgActive] = ImVec4(0.00f, 0.00f, 0.00f, 1.00f);
-	style.Colors[ImGuiCol_MenuBarBg] = ImVec4(0.35f, 0.35f, 0.35f, 1.00f);
-	style.Colors[ImGuiCol_ScrollbarBg] = ImVec4(0.13f, 0.13f, 0.13f, 1.00f);
-	style.Colors[ImGuiCol_ScrollbarGrab] = ImVec4(0.24f, 0.40f, 0.95f, 1.00f);
-	style.Colors[ImGuiCol_ScrollbarGrabHovered] = ImVec4(0.24f, 0.40f, 0.95f, 0.59f);
-	style.Colors[ImGuiCol_ScrollbarGrabActive] = ImVec4(0.00f, 0.00f, 0.00f, 1.00f);
-	style.Colors[ImGuiCol_SliderGrab] = ImVec4(1.00f, 1.00f, 1.00f, 0.59f);
-	style.Colors[ImGuiCol_SliderGrabActive] = ImVec4(0.24f, 0.40f, 0.95f, 1.00f);
-	style.Colors[ImGuiCol_Button] = ImVec4(0.24f, 0.40f, 0.95f, 1.00f);
-	style.Colors[ImGuiCol_ButtonHovered] = ImVec4(0.24f, 0.40f, 0.95f, 0.59f);
-	style.Colors[ImGuiCol_ButtonActive] = ImVec4(0.39f, 0.39f, 0.39f, 1.00f);
-	style.Colors[ImGuiCol_Header] = ImVec4(0.24f, 0.40f, 0.95f, 1.00f);
-	style.Colors[ImGuiCol_Separator] = ImVec4(0.40f, 0.40f, 0.40f, 1.00f);
-	style.Colors[ImGuiCol_HeaderHovered] = ImVec4(0.24f, 0.40f, 0.95f, 0.59f);
-	style.Colors[ImGuiCol_HeaderActive] = ImVec4(0.39f, 0.39f, 0.39f, 1.00f);
-	//style.Colors[ImGuiCol_ColumnHovered] = ImVec4(0.70f, 0.02f, 0.60f, 0.22f);
+	style.ScrollbarSize = 9.0f;
+	
 	ImGuiIO& io = ImGui::GetIO();
 	io.IniFilename = nullptr;
 	io.LogFilename = nullptr;
@@ -83,7 +131,7 @@ void c_gui::init() noexcept {
 		const std::filesystem::path path{ pathToFonts };
 		CoTaskMemFree(pathToFonts);
 
-		static ImWchar ranges[] = { 0x0020, 0x00FF, 0x0100, 0x017f, 0 };
+		static constexpr ImWchar ranges[]{ 0x0020, 0xFFFF, 0 };
 		fonts.tahoma = io.Fonts->AddFontFromFileTTF((path / "tahoma.ttf").string().c_str(), 16.0f, nullptr, ranges);
 		fonts.segoeui = io.Fonts->AddFontFromFileTTF((path / "segoeui.ttf").string().c_str(), 16.0f, nullptr, ranges);
 		//io.FontDefault = io.Fonts->AddFontFromFileTTF((path / "Deng.ttf").string().c_str(), 16.0f, nullptr, io.Fonts->GetGlyphRangesChineseSimplifiedCommon());
@@ -92,26 +140,34 @@ void c_gui::init() noexcept {
 }
 
 void c_gui::render() noexcept {
+	ImGui::SetNextWindowSize({ GET_FLOAT[g_config.gui.w], GET_FLOAT[g_config.gui.h] });
+	ImGui::Begin("Osiris", nullptr, windowFlags | ImGuiWindowFlags_NoTitleBar);
+
 	renderMenuBar();
 	renderConfigWindow();
+	renderLuaWindow();
 	ImGui::End();
 }
 
+
 void c_gui::renderMenuBar() noexcept {
-	ImGui::SetNextWindowSize({ 800.0f, 0.0f });
-	ImGui::Begin("Osiris", nullptr, windowFlags | ImGuiWindowFlags_NoTitleBar);
 	if (ImGui::BeginTabBar("TabBar", ImGuiTabBarFlags_Reorderable)) {
-		if (ImGui::BeginTabItem("Config")) {
-			window = { };
-			window.config = true;
-			ImGui::EndTabItem();
+		for (auto tab : GET_STRINGS[g_config.gui.tab_name]) {
+			auto tab_name = tab.second.c_str();
+			if (ImGui::BeginTabItem(tab_name)) {
+				GET_BOOLS_MAP[g_config.gui.tab_bool][tab_name] = true;
+				ImGui::EndTabItem();
+			}
+			else {
+				GET_BOOLS_MAP[g_config.gui.tab_bool][tab_name] = false;
+			}
 		}
 		ImGui::EndTabBar();
 	}
 }
 
 void c_gui::renderConfigWindow() noexcept {
-	if (window.config) {
+	if (GET_BOOLS_MAP[g_config.gui.tab_bool]["Config"]) {
 		ImGui::Columns(2, nullptr, false);
 		//ImGui::SetColumnOffset(1, 170.0f);
 
@@ -158,5 +214,21 @@ void c_gui::renderConfigWindow() noexcept {
 			}
 			ImGui::PopItemWidth();
 			//ImGui::End();
+	}
+}
+
+void c_gui::renderLuaWindow() noexcept {
+	for (auto tab : GET_STRINGS[g_config.gui.tab_name]) {
+		auto tab_name = tab.second;
+		if (GET_BOOLS_MAP[g_config.gui.tab_bool][tab_name]) {
+			ImGui::Text(tab_name.c_str());
+			int container_count = GET_INTS_MAP[g_config.gui.container_count][tab_name];
+			if (container_count > 0) {
+				for (int i = 0; i < container_count; i++) {
+					char buffer[8] = { 0 }; _itoa(i, buffer, 10);
+					draw_lua_items(tab_name, buffer);
+				}
+			}
+		}
 	}
 }

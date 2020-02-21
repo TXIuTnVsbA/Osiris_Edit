@@ -51,6 +51,11 @@ void c_config::load(size_t id) noexcept {
     auto& json_color = json["color"];
     auto& json_string = json["string"];
 
+    auto& json_tuple_bool = json["tuple_bool"];
+    auto& json_tuple_int = json["tuple_int"];
+    auto& json_tuple_float = json["tuple_float"];
+    auto& json_tuple_string = json["tuple_string"];
+
     auto& json_map_bool = json["map_bool"];
     auto& json_map_int = json["map_int"];
     auto& json_map_float = json["map_float"];
@@ -111,6 +116,79 @@ void c_config::load(size_t id) noexcept {
         }
     }
 
+    if (!json_tuple_bool.isNull()) {
+        auto members_1 = json_tuple_bool.getMemberNames();
+        for (auto iter_1 = members_1.begin(); iter_1 != members_1.end(); ++iter_1) {
+            std::string member_name_1 = *iter_1;
+            auto member_1 = json_tuple_bool[member_name_1];
+            if (!member_1.isNull()) {
+                auto members_2 = member_1.getMemberNames();
+                for (auto iter_2 = members_2.begin(); iter_2 != members_2.end(); ++iter_2) {
+                    std::string member_name_2 = *iter_2;
+                    auto member_2 = member_1[member_name_2];
+                    if (!member_2.isNull()) {
+                        int x = atoi(member_name_2.c_str());
+                        i_b[member_name_1][x] = member_2.asBool();
+                    }
+                }
+            }
+        }
+    }
+    if (!json_tuple_int.isNull()) {
+        auto members_1 = json_tuple_int.getMemberNames();
+        for (auto iter_1 = members_1.begin(); iter_1 != members_1.end(); ++iter_1) {
+            std::string member_name_1 = *iter_1;
+            auto member_1 = json_tuple_int[member_name_1];
+            if (!member_1.isNull()) {
+                auto members_2 = member_1.getMemberNames();
+                for (auto iter_2 = members_2.begin(); iter_2 != members_2.end(); ++iter_2) {
+                    std::string member_name_2 = *iter_2;
+                    auto member_2 = member_1[member_name_2];
+                    if (!member_2.isNull()) {
+                        int x = atoi(member_name_2.c_str());
+                        i_i[member_name_1][x] = member_2.asInt();
+                    }
+                }
+            }
+        }
+    }
+    if (!json_tuple_float.isNull()) {
+        auto members_1 = json_tuple_float.getMemberNames();
+        for (auto iter_1 = members_1.begin(); iter_1 != members_1.end(); ++iter_1) {
+            std::string member_name_1 = *iter_1;
+            auto member_1 = json_tuple_float[member_name_1];
+            if (!member_1.isNull()) {
+                auto members_2 = member_1.getMemberNames();
+                for (auto iter_2 = members_2.begin(); iter_2 != members_2.end(); ++iter_2) {
+                    std::string member_name_2 = *iter_2;
+                    auto member_2 = member_1[member_name_2];
+                    if (!member_2.isNull()) {
+                        int x = atoi(member_name_2.c_str());
+                        i_f[member_name_1][x] = member_2.asFloat();
+                    }
+                }
+            }
+        }
+    }
+    if (!json_tuple_string.isNull()) {
+        auto members_1 = json_tuple_string.getMemberNames();
+        for (auto iter_1 = members_1.begin(); iter_1 != members_1.end(); ++iter_1) {
+            std::string member_name_1 = *iter_1;
+            auto member_1 = json_tuple_string[member_name_1];
+            if (!member_1.isNull()) {
+                auto members_2 = member_1.getMemberNames();
+                for (auto iter_2 = members_2.begin(); iter_2 != members_2.end(); ++iter_2) {
+                    std::string member_name_2 = *iter_2;
+                    auto member_2 = member_1[member_name_2];
+                    if (!member_2.isNull()) {
+                        int x = atoi(member_name_2.c_str());
+                        i_s[member_name_1][x] = member_2.asString();
+                    }
+                }
+            }
+        }
+    }
+
     if (!json_map_bool.isNull()) {
         auto members_1 = json_map_bool.getMemberNames();
         for (auto iter_1 = members_1.begin(); iter_1 != members_1.end(); ++iter_1) {
@@ -122,8 +200,7 @@ void c_config::load(size_t id) noexcept {
                     std::string member_name_2 = *iter_2;
                     auto member_2 = member_1[member_name_2];
                     if (!member_2.isNull()) {
-                        int x = atoi(member_name_2.c_str());
-                        m_b[member_name_1][x] = member_2.asBool();
+                        s_b[member_name_1][member_name_2] = member_2.asBool();
                     }
                 }
             }
@@ -140,15 +217,14 @@ void c_config::load(size_t id) noexcept {
                     std::string member_name_2 = *iter_2;
                     auto member_2 = member_1[member_name_2];
                     if (!member_2.isNull()) {
-                        int x = atoi(member_name_2.c_str());
-                        m_i[member_name_1][x] = member_2.asInt();
+                        s_i[member_name_1][member_name_2] = member_2.asInt();
                     }
                 }
             }
         }
     }
     if (!json_map_float.isNull()) {
-        auto members_1 = json_map_float.getMemberNames();
+        auto members_1 = json_tuple_float.getMemberNames();
         for (auto iter_1 = members_1.begin(); iter_1 != members_1.end(); ++iter_1) {
             std::string member_name_1 = *iter_1;
             auto member_1 = json_map_float[member_name_1];
@@ -158,15 +234,14 @@ void c_config::load(size_t id) noexcept {
                     std::string member_name_2 = *iter_2;
                     auto member_2 = member_1[member_name_2];
                     if (!member_2.isNull()) {
-                        int x = atoi(member_name_2.c_str());
-                        m_f[member_name_1][x] = member_2.asFloat();
+                        s_f[member_name_1][member_name_2] = member_2.asFloat();
                     }
                 }
             }
         }
     }
     if (!json_map_string.isNull()) {
-        auto members_1 = json_map_string.getMemberNames();
+        auto members_1 = json_tuple_string.getMemberNames();
         for (auto iter_1 = members_1.begin(); iter_1 != members_1.end(); ++iter_1) {
             std::string member_name_1 = *iter_1;
             auto member_1 = json_map_string[member_name_1];
@@ -176,13 +251,13 @@ void c_config::load(size_t id) noexcept {
                     std::string member_name_2 = *iter_2;
                     auto member_2 = member_1[member_name_2];
                     if (!member_2.isNull()) {
-                        int x = atoi(member_name_2.c_str());
-                        m_s[member_name_1][x] = member_2.asString();
+                        s_s[member_name_1][member_name_2] = member_2.asString();
                     }
                 }
             }
         }
     }
+
 }
 
 void c_config::save(size_t id) const noexcept {
@@ -192,6 +267,11 @@ void c_config::save(size_t id) const noexcept {
     auto& json_float = json["float"];
     auto& json_color = json["color"];
     auto& json_string = json["string"];
+
+    auto& json_tuple_bool = json["tuple_bool"];
+    auto& json_tuple_int = json["tuple_int"];
+    auto& json_tuple_float = json["tuple_float"];
+    auto& json_tuple_string = json["tuple_string"];
 
     auto& json_map_bool = json["map_bool"];
     auto& json_map_int = json["map_int"];
@@ -222,7 +302,7 @@ void c_config::save(size_t id) const noexcept {
         json_string[kv.first] = kv.second;
     }
     
-    for (auto kv : m_b)
+    for (auto kv : i_b)
     {
         Json::Value json_map;
         for (auto v : kv.second)
@@ -233,51 +313,91 @@ void c_config::save(size_t id) const noexcept {
             //sprintf(buffer, "%d", v.first);
             char buffer[8] = { 0 }; _itoa(v.first, buffer, 10);
             json_map[buffer] = v.second;
+        }
+        json_tuple_bool[kv.first] = json_map;
+    }
+
+    for (auto kv : i_i)
+    {
+        Json::Value json_map;
+        for (auto v : kv.second)
+        {
+            //json_map[v.first] = v.second;
+
+            //char buffer[8] = { 0 };
+            //sprintf(buffer, "%d", v.first);
+            char buffer[8] = { 0 }; _itoa(v.first, buffer, 10);
+            json_map[buffer] = v.second;
+        }
+        json_tuple_int[kv.first] = json_map;
+    }
+
+    for (auto kv : i_f)
+    {
+        Json::Value json_map;
+        for (auto v : kv.second)
+        {
+            //json_map[v.first] = v.second;
+
+            //char buffer[8] = { 0 };
+            //sprintf(buffer, "%d", v.first);
+            char buffer[8] = { 0 }; _itoa(v.first, buffer, 10);
+            json_map[buffer] = v.second;
+        }
+        json_tuple_float[kv.first] = json_map;
+    }
+
+    for (auto kv : i_s)
+    {
+        Json::Value json_map;
+        for (auto v : kv.second)
+        {
+            //json_map[v.first] = v.second;
+
+            //char buffer[8] = { 0 };
+            //sprintf(buffer, "%d", v.first);
+            char buffer[8] = { 0 }; _itoa(v.first, buffer, 10);
+            json_map[buffer] = v.second;
+        }
+        json_tuple_string[kv.first] = json_map;
+    }
+
+    for (auto kv : s_b)
+    {
+        Json::Value json_map;
+        for (auto v : kv.second)
+        {
+            json_map[v.first] = v.second;
         }
         json_map_bool[kv.first] = json_map;
     }
 
-    for (auto kv : m_i)
+    for (auto kv : s_i)
     {
         Json::Value json_map;
         for (auto v : kv.second)
         {
-            //json_map[v.first] = v.second;
-
-            //char buffer[8] = { 0 };
-            //sprintf(buffer, "%d", v.first);
-            char buffer[8] = { 0 }; _itoa(v.first, buffer, 10);
-            json_map[buffer] = v.second;
+            json_map[v.first] = v.second;
         }
         json_map_int[kv.first] = json_map;
     }
 
-    for (auto kv : m_f)
+    for (auto kv : s_f)
     {
         Json::Value json_map;
         for (auto v : kv.second)
         {
-            //json_map[v.first] = v.second;
-
-            //char buffer[8] = { 0 };
-            //sprintf(buffer, "%d", v.first);
-            char buffer[8] = { 0 }; _itoa(v.first, buffer, 10);
-            json_map[buffer] = v.second;
+            json_map[v.first] = v.second;
         }
         json_map_float[kv.first] = json_map;
     }
 
-    for (auto kv : m_s)
+    for (auto kv : s_s)
     {
         Json::Value json_map;
         for (auto v : kv.second)
         {
-            //json_map[v.first] = v.second;
-
-            //char buffer[8] = { 0 };
-            //sprintf(buffer, "%d", v.first);
-            char buffer[8] = { 0 }; _itoa(v.first, buffer, 10);
-            json_map[buffer] = v.second;
+            json_map[v.first] = v.second;
         }
         json_map_string[kv.first] = json_map;
     }
@@ -309,12 +429,32 @@ void c_config::rename(size_t item, const char* newName) noexcept
     configs[item] = newName;
 }
 
+void c_config::default() noexcept {
+    //default
+
+    GET_FLOAT[gui.w] = 500.f;
+    GET_FLOAT[gui.h] = 500.f;
+
+    GET_STRINGS[gui.tab_name][0] = "Config";
+    GET_BOOLS_MAP[gui.tab_bool]["Config"] = false;
+    GET_INTS_MAP[gui.container_count]["Config"] = 1;
+
+    GET_STRINGS[gui.tab_name][1] = "Test1_Tab";
+    GET_BOOLS_MAP[gui.tab_bool]["Test1_Tab"] = false;
+    GET_INTS_MAP[gui.container_count]["Test1_Tab"] = 2;
+
+    GET_STRINGS[gui.tab_name][2] = "Test2_Tab";
+    GET_BOOLS_MAP[gui.tab_bool]["Test2_Tab"] = false;
+    GET_INTS_MAP[gui.container_count]["Test2_Tab"] = 2;
+
+}
+
 void c_config::reset() noexcept
 {
-
+    //reset
 }
 
 void c_config::refresh() noexcept
 {
-
+    //refresh
 }
