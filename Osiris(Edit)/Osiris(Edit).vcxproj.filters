@@ -64,9 +64,6 @@
     <ClCompile Include="lua\Clua.cpp">
       <Filter>源文件\lua</Filter>
     </ClCompile>
-    <ClCompile Include="lua\CLuaHook.cpp">
-      <Filter>源文件\lua</Filter>
-    </ClCompile>
     <ClCompile Include="config\config.cpp">
       <Filter>源文件\config</Filter>
     </ClCompile>
@@ -123,13 +120,7 @@
     <ClInclude Include="utils\Singleton.h">
       <Filter>源文件\utils</Filter>
     </ClInclude>
-    <ClInclude Include="lua\includes.h">
-      <Filter>源文件\lua</Filter>
-    </ClInclude>
     <ClInclude Include="lua\Clua.h">
-      <Filter>源文件\lua</Filter>
-    </ClInclude>
-    <ClInclude Include="lua\CLuaHook.h">
       <Filter>源文件\lua</Filter>
     </ClInclude>
     <ClInclude Include="config\config.h">

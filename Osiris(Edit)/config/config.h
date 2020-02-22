@@ -28,7 +28,6 @@ public:
     void rename(size_t, const char*) noexcept;
     void default() noexcept;
     void reset() noexcept;
-    void refresh() noexcept;
 
     constexpr auto& getConfigs() noexcept
     {
@@ -37,7 +36,7 @@ public:
     struct
     {
         //float w,h
-        const char* w{"gui_w"};
+		const char* w{ "gui_w" };
         const char* h{ "gui_h" };
 
         //tuple_string tab_name
@@ -47,7 +46,7 @@ public:
         const char* tab_bool{ "gui_tab_bool" };
 
         //map_int container_count
-        const char* container_count{ "container_count" };
+        const char* container_count{ "gui_container_count" };
 
 
     }gui;

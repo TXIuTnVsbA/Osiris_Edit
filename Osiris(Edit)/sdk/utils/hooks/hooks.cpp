@@ -10,10 +10,12 @@
 #include "../../../gui/imgui/imgui_impl_dx9.h"
 #include "../../../gui/imgui/imgui_impl_win32.h"
 #include "../../../config/config.h"
+#include "../../../utils/console/console.h"
 #include "../../../gui/gui.h"
 #include "hooks.h"
 #include "../interfaces/interfaces.h"
 #include "../memory/memory.h"
+#include "../../../lua/Clua.h"
 
 //features
 //sdk
@@ -32,6 +34,7 @@
 #include "../../interfaces/SoundEmitter.h"
 #include "../../interfaces/Surface.h"
 #include "../../interfaces/UserCmd.h"
+#include "../../interfaces/FrameStage.h"
 
 c_hooks g_hooks;
 ////////////////////////////////////////////////////////////////
@@ -89,6 +92,73 @@ void c_vmt::restore() noexcept
         *reinterpret_cast<uintptr_t**>(base) = oldVmt;
     if (newVmt)
         ZeroMemory(newVmt, length * sizeof(uintptr_t));
+}
+////////////////////////////////////////////////////////////////
+static void __stdcall frameStageNotify(FrameStage stage) noexcept {
+    for (auto hk : lua::hooks->getHooks("on_frame_stage_notify"))
+    {
+        try
+        {
+            auto result = hk.func((int)stage);
+            if (!result.valid()) {
+                sol::error err = result;
+                g_console.log(err.what());
+                g_interfaces.cvar->consoleColorPrintf(CColor(255, 0, 0), err.what());
+            }
+        }
+        catch (const std::exception&)
+        {
+
+        }
+    }
+    g_hooks.client.callOriginal<void, 37>(stage);
+}
+static bool __stdcall createMove(float inputSampleTime, UserCmd* cmd) noexcept {
+    auto result = g_hooks.clientMode.callOriginal<bool, 24>(inputSampleTime, cmd);
+    if (!cmd->commandNumber)
+        return result;
+
+    for (auto hk : lua::hooks->getHooks("on_create_move"))
+    {
+        try
+        {
+            auto result = hk.func(cmd);
+            if (!result.valid()) {
+                sol::error err = result;
+                g_console.log(err.what());
+                g_interfaces.cvar->consoleColorPrintf(CColor(255, 0, 0), err.what());
+            }
+        }
+        catch (const std::exception&)
+        {
+
+        }
+    }
+
+
+    return false;
+}
+static void __stdcall paintTraverse(unsigned int panel, bool forceRepaint, bool allowForce) noexcept
+{
+    if (g_interfaces.panel->getName(panel) == "MatSystemTopPanel") {
+        for (auto hk : lua::hooks->getHooks("on_paint"))
+        {
+            try
+            {
+                auto result = hk.func();
+                if (!result.valid()) {
+                    sol::error err = result;
+                    g_console.log(err.what());
+                    g_interfaces.cvar->consoleColorPrintf(CColor(255, 0, 0), err.what());
+                }
+            }
+            catch (const std::exception&)
+            {
+
+            }
+        }
+    }
+    g_hooks.panel.callOriginal<void, 41>(panel, forceRepaint, allowForce);
 }
 ////////////////////////////////////////////////////////////////
 static LRESULT __stdcall wndProc(HWND window, UINT msg, WPARAM wParam, LPARAM lParam) {
@@ -171,6 +241,9 @@ void c_hooks::hook() noexcept {
     originalReset = **reinterpret_cast<decltype(originalReset)**>(g_memory.reset);
     **reinterpret_cast<decltype(reset)***>(g_memory.reset) = reset;
 
+    client.hookAt(37, frameStageNotify);
+    clientMode.hookAt(24, createMove);
+    panel.hookAt(41, paintTraverse);
     surface.hookAt(67, lockCursor);
 
 }

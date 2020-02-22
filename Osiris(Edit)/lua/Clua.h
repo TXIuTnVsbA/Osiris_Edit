@@ -1,8 +1,24 @@
 #pragma once
-//#include "../utils/singleton.h"
-#include "CLuaHook.h"
+#include "sol.hpp"
+#include <map>
 #include <filesystem>
 namespace lua {
+	struct c_lua_hook {
+		int scriptId;
+		sol::protected_function func;
+	};
+
+	class c_lua_hookManager {
+	public:
+		void registerHook(std::string eventName, int scriptId, sol::protected_function func);
+		void unregisterHooks(int scriptId);
+
+		std::vector<c_lua_hook> getHooks(std::string eventName);
+
+	private:
+		std::map<std::string, std::vector<c_lua_hook>> hooks;
+	};
+
 	enum MENUITEMTYPE {
 		MENUITEM_CHECKBOX = 0,
 		MENUITEM_SLIDERINT,

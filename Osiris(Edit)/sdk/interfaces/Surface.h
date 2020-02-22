@@ -137,7 +137,7 @@ public:
                 xs[j] = static_cast<int>(std::cos(degreesToRadians(static_cast<float>(j * 30))) * i + x);
                 ys[j] = static_cast<int>(std::sin(degreesToRadians(static_cast<float>(j * 30))) * i + y);
             }
-            interfaces.surface->drawPolyLine(xs, ys, 12);
+            g_interfaces.surface->drawPolyLine(xs, ys, 12);
         }
     }
     constexpr void drawFilledRectFade(int x0, int y0, int x1, int y1, unsigned int alpha0, unsigned int alpha1, bool horizontal) noexcept {

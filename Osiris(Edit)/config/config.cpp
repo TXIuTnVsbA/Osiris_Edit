@@ -4,6 +4,7 @@
 #include "config.h"
 #include "../utils/console/console.h"
 c_config g_config{};
+
 void c_config::init() noexcept {
     if (PWSTR pathToDocuments; SUCCEEDED(SHGetKnownFolderPath(FOLDERID_Documents, 0, nullptr, &pathToDocuments))) {
         _path = pathToDocuments;
@@ -22,6 +23,9 @@ void c_config::init() noexcept {
         std::filesystem::remove(path);
         std::filesystem::create_directory(path);
     }
+
+    if (configs.size() > 0)
+        configs = {};
 
     std::transform(std::filesystem::directory_iterator{ path },
         std::filesystem::directory_iterator{ },
@@ -224,7 +228,7 @@ void c_config::load(size_t id) noexcept {
         }
     }
     if (!json_map_float.isNull()) {
-        auto members_1 = json_tuple_float.getMemberNames();
+        auto members_1 = json_map_float.getMemberNames();
         for (auto iter_1 = members_1.begin(); iter_1 != members_1.end(); ++iter_1) {
             std::string member_name_1 = *iter_1;
             auto member_1 = json_map_float[member_name_1];
@@ -241,7 +245,7 @@ void c_config::load(size_t id) noexcept {
         }
     }
     if (!json_map_string.isNull()) {
-        auto members_1 = json_tuple_string.getMemberNames();
+        auto members_1 = json_map_string.getMemberNames();
         for (auto iter_1 = members_1.begin(); iter_1 != members_1.end(); ++iter_1) {
             std::string member_name_1 = *iter_1;
             auto member_1 = json_map_string[member_name_1];
@@ -301,7 +305,7 @@ void c_config::save(size_t id) const noexcept {
     {
         json_string[kv.first] = kv.second;
     }
-    
+
     for (auto kv : i_b)
     {
         Json::Value json_map;
@@ -437,24 +441,37 @@ void c_config::default() noexcept {
 
     GET_STRINGS[gui.tab_name][0] = "Config";
     GET_BOOLS_MAP[gui.tab_bool]["Config"] = false;
+    GET_FLOATS_MAP[gui.w]["Config"] = 500.f;
+    GET_FLOATS_MAP[gui.h]["Config"] = 500.f;
     GET_INTS_MAP[gui.container_count]["Config"] = 1;
 
-    GET_STRINGS[gui.tab_name][1] = "Test1_Tab";
-    GET_BOOLS_MAP[gui.tab_bool]["Test1_Tab"] = false;
-    GET_INTS_MAP[gui.container_count]["Test1_Tab"] = 2;
+    GET_STRINGS[gui.tab_name][1] = "Lua";
+    GET_BOOLS_MAP[gui.tab_bool]["Lua"] = false;
+    GET_FLOATS_MAP[gui.w]["Lua"] = 500.f;
+    GET_FLOATS_MAP[gui.h]["Lua"] = 500.f;
+    GET_INTS_MAP[gui.container_count]["Lua"] = 1;
 
-    GET_STRINGS[gui.tab_name][2] = "Test2_Tab";
-    GET_BOOLS_MAP[gui.tab_bool]["Test2_Tab"] = false;
-    GET_INTS_MAP[gui.container_count]["Test2_Tab"] = 2;
+    GET_STRINGS[gui.tab_name][2] = "Console";
+    GET_BOOLS_MAP[gui.tab_bool]["Console"] = false;
+    GET_FLOATS_MAP[gui.w]["Console"] = 500.f;
+    GET_FLOATS_MAP[gui.h]["Console"] = 500.f;
+    GET_INTS_MAP[gui.container_count]["Console"] = 1;
 
 }
 
-void c_config::reset() noexcept
-{
-    //reset
-}
-
-void c_config::refresh() noexcept
-{
-    //refresh
+void c_config::reset() noexcept {
+    GET_BOOL.clear();
+    GET_INT.clear();
+    GET_FLOAT.clear();
+    GET_COLOR.clear();
+    GET_STRING.clear();
+    GET_BOOLS.clear();
+    GET_INTS.clear();
+    GET_FLOATS.clear();
+    GET_STRINGS.clear();
+    GET_BOOLS_MAP.clear();
+    GET_INTS_MAP.clear();
+    GET_FLOATS_MAP.clear();
+    GET_STRINGS_MAP.clear();
+    default();
 }

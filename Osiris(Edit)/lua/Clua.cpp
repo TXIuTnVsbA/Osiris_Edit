@@ -4,6 +4,24 @@
 #include "../utils/console/console.h"
 #include "../utils/KeyState.h"
 #include "../config/config.h"
+
+#include "../sdk/utils/interfaces/interfaces.h"
+#include "../sdk/utils/memory/memory.h"
+#include "../sdk/utils/netvars/netvars.h"
+
+#include "../sdk/interfaces/Cvar.h"
+#include "../sdk/interfaces/ConVar.h"
+#include "../sdk/interfaces/Engine.h"
+#include "../sdk/interfaces/Surface.h"
+#include "../sdk/interfaces/Vector.h"
+#include "../sdk/interfaces/UserCmd.h"
+#include "../sdk/interfaces/Entity.h"
+#include "../sdk/interfaces/EntityList.h"
+#include "../sdk/interfaces/GameUI.h"
+#include "../sdk/interfaces/InputSystem.h"
+#include "../sdk/interfaces/Localize.h"
+#include "../sdk/interfaces/GlobalVars.h"
+
 namespace lua {
 	bool g_unload_flag = false;
 	lua_State* g_lua_state = NULL;
@@ -68,7 +86,7 @@ namespace lua {
 				if (kv.first == key)
 					retn = std::make_tuple(sol::make_object(s, kv.second), sol::nil, sol::nil, sol::nil);
 
-			
+
 			for (auto kv : g_config.i)
 				if (kv.first == key)
 					retn = std::make_tuple(sol::make_object(s, kv.second), sol::nil, sol::nil, sol::nil);
@@ -80,7 +98,7 @@ namespace lua {
 			for (auto kv : g_config.i_b)
 				if (kv.first == key)
 					retn = std::make_tuple(sol::make_object(s, kv.second), sol::nil, sol::nil, sol::nil);
-			
+
 			for (auto kv : g_config.i_f)
 				if (kv.first == key)
 					retn = std::make_tuple(sol::make_object(s, kv.second), sol::nil, sol::nil, sol::nil);
@@ -92,7 +110,7 @@ namespace lua {
 			for (auto kv : g_config.i_s)
 				if (kv.first == key)
 					retn = std::make_tuple(sol::make_object(s, kv.second), sol::nil, sol::nil, sol::nil);
-			
+
 			for (auto kv : g_config.s_b)
 				if (kv.first == key)
 					retn = std::make_tuple(sol::make_object(s, kv.second), sol::nil, sol::nil, sol::nil);
@@ -193,11 +211,383 @@ namespace lua {
 		}
 	};
 
+	namespace ns_cvar {
+		ConVar* find_var(std::string name) {
+			return g_interfaces.cvar->findVar(name.c_str());
+		}
+		void console_color_printf(CColor color,std::string v) {
+			g_interfaces.cvar->consoleColorPrintf(color,v.c_str());
+		}
+		void console_printf(std::string v) {
+			CColor color{};
+			g_interfaces.cvar->consoleColorPrintf(color,v.c_str());
+		}
+	};
+
+	namespace ns_convar {
+		int get_int(ConVar* c_convar) {
+			return c_convar->getInt();
+		}
+
+		float get_float(ConVar* c_convar) {
+			return c_convar->getFloat();
+		}
+
+		void set_int(ConVar* c_convar, int value) {
+			c_convar->setValue(value);
+		}
+
+		void set_float(ConVar* c_convar, float value) {
+			c_convar->setValue(value);
+		}
+
+		void set_char(ConVar* c_convar, std::string value) {
+			c_convar->setValue(value.c_str());
+		}
+	};
+
+	namespace ns_engine {
+		void client_cmd(std::string cmd) {
+			g_interfaces.engine->clientCmd(cmd.c_str());
+		}
+		void client_cmd_unrestricted(std::string cmd) {
+			g_interfaces.engine->clientCmdUnrestricted(cmd.c_str());
+		}
+		void execute_client_cmd(std::string cmd) {
+			g_interfaces.engine->executeClientCmd(cmd.c_str());
+		}
+
+		PlayerInfo get_player_info(int ent) {
+			PlayerInfo p;
+			g_interfaces.engine->getPlayerInfo(ent, p);
+			return p;
+		}
+
+		int get_player_for_user_id(int userid) {
+			return g_interfaces.engine->getPlayerForUserID(userid);
+		}
+
+		int get_local_player_index() {
+			return g_interfaces.engine->getLocalPlayer();
+		}
+
+		Vector get_view_angles() {
+			Vector va;
+			g_interfaces.engine->getViewAngles(va);
+			return va;
+		}
+
+		void set_view_angles(Vector va) {
+			g_interfaces.engine->setViewAngles(va);
+		}
+
+		int get_max_clients() {
+			return g_interfaces.engine->getMaxClients();
+		}
+
+		bool is_in_game() {
+			return g_interfaces.engine->isInGame();
+		}
+
+		bool is_connected() {
+			return g_interfaces.engine->isConnected();
+		}
+	};
+
+	namespace ns_entity {
+		bool is_pistol(Entity* entity) {
+			return entity->isPistol();
+		}
+		bool is_sniper_rifle(Entity* entity) {
+			return entity->isSniperRifle();
+		}
+		Vector get_bone_position(Entity* entity, int bone) {
+			return entity->getBonePosition(bone);
+		}
+		Vector get_eye_position(Entity* entity) {
+			return entity->getEyePosition();
+		}
+		bool is_visible_none(Entity* entity) {
+			return entity->isVisible();
+		}
+		bool is_visible_position(Entity* entity, Vector v) {
+			return entity->isVisible(v);
+		}
+		bool is_enemy(Entity* entity) {
+			return entity->isEnemy();
+		}
+		bool is_dormant(Entity* entity) {
+			return entity->isDormant();
+		}
+		bool is_weapon(Entity* entity) {
+			return entity->isWeapon();
+		}
+		bool is_alive(Entity* entity) {
+			return entity->isAlive();
+		}
+		bool is_player(Entity* entity) {
+			return entity->isPlayer();
+		}
+		Entity* get_active_weapon(Entity* entity) {
+			return entity->getActiveWeapon();
+		}
+		int get_weapon_sub_type(Entity* entity) {
+			return entity->getWeaponSubType();
+		}
+		WeaponData* get_weapon_data(Entity* entity) {
+			return entity->getWeaponData();
+		}
+		float get_inaccuracy(Entity* entity) {
+			return entity->getInaccuracy();
+		}
+		Vector get_abs_origin(Entity* entity) {
+			return entity->getAbsOrigin();
+		}
+		AnimState* get_animstate(Entity* entity) {
+			return entity->getAnimstate();
+		}
+		float get_max_desync_angle(Entity* entity) {
+			return entity->getMaxDesyncAngle();
+		}
+		bool is_in_reload(Entity* entity) {
+			return entity->isInReload();
+		}
+		Vector get_aim_punch(Entity* entity) {
+			return entity->getAimPunch();
+		}
+
+		//NETVAR
+		int get_health(Entity* entity) {
+			return entity->health();
+		}
+		int get_body(Entity* entity) {
+			return entity->body();
+		}
+		int get_hitboxSet(Entity* entity) {
+			return entity->hitboxSet();
+		}
+		Vector get_origin(Entity* entity) {
+			return entity->origin();
+		}
+		int get_crosshairId(Entity* entity) {
+			return entity->crosshairId();
+		}
+		Vector get_aim_punch_angle(Entity* entity) {
+			return entity->aimPunchAngle();
+		}
+
+		
+		sol::object get_netvar_offset(sol::this_state s, Entity* entity, std::string class_name, std::string var_name, int offset) {
+			auto hash = fnv::hash((class_name + "->" + var_name).c_str());
+			Vector v4 = *reinterpret_cast<std::add_pointer_t<Vector>>(entity + g_netvars[hash] + offset);
+			if (v4)
+				return sol::make_object(s, v4);
+
+			float v3 = *reinterpret_cast<std::add_pointer_t<float>>(entity + g_netvars[hash] + offset);
+			if (v3)
+				return sol::make_object(s, v3);
+
+			int v1 = *reinterpret_cast<std::add_pointer_t<int>>(entity + g_netvars[hash] + offset);
+			if (v1)
+				return sol::make_object(s, v1);
+
+			bool v2 = *reinterpret_cast<std::add_pointer_t<bool>>(entity + g_netvars[hash] + offset);
+			if (v2)
+				return sol::make_object(s, v2);
+
+			return sol::nil;
+		}
+
+		int get_netvar_int(Entity* entity, std::string class_name, std::string var_name, int offset)
+		{
+			auto hash = fnv::hash((class_name + "->" + var_name).c_str());
+			return *reinterpret_cast<std::add_pointer_t<int>>(entity + g_netvars[hash] + offset);
+		}
+		bool get_netvar_bool(Entity* entity, std::string class_name, std::string var_name, int offset)
+		{
+			auto hash = fnv::hash((class_name + "->" + var_name).c_str());
+			return *reinterpret_cast<std::add_pointer_t<bool>>(entity + g_netvars[hash] + offset);
+		
+		}
+		float get_netvar_float(Entity* entity, std::string class_name, std::string var_name, int offset)
+		{
+			auto hash = fnv::hash((class_name + "->" + var_name).c_str());
+			return *reinterpret_cast<std::add_pointer_t<float>>(entity + g_netvars[hash] + offset);
+		}
+		Vector get_netvar_vector(Entity* entity, std::string class_name, std::string var_name, int offset)
+		{
+			auto hash = fnv::hash((class_name + "->" + var_name).c_str());
+			return *reinterpret_cast<std::add_pointer_t<Vector>>(entity + g_netvars[hash] + offset);
+		}
+
+		void set_netvar_int(Entity* entity, std::string class_name, std::string var_name, int offset, int var)
+		{
+			auto hash = fnv::hash((class_name + "->" + var_name).c_str());
+			auto v1 = reinterpret_cast<std::add_pointer_t<int>>(entity + g_netvars[hash] + offset);
+			if (v1)
+				*v1 = var;
+		}
+		void set_netvar_bool(Entity* entity, std::string class_name, std::string var_name, int offset, bool var)
+		{
+			auto hash = fnv::hash((class_name + "->" + var_name).c_str());
+			auto v1 = reinterpret_cast<std::add_pointer_t<bool>>(entity + g_netvars[hash] + offset);
+			if (v1)
+				*v1 = var;
+		}
+		void set_netvar_float(Entity* entity, std::string class_name, std::string var_name, int offset, float var)
+		{
+			auto hash = fnv::hash((class_name + "->" + var_name).c_str());
+			auto v1 = reinterpret_cast<std::add_pointer_t<float>>(entity + g_netvars[hash] + offset);
+			if (v1)
+				*v1 = var;
+		}
+		void set_netvar_vector(Entity* entity, std::string class_name, std::string var_name, int offset, Vector var)
+		{
+			auto hash = fnv::hash((class_name + "->" + var_name).c_str());
+			auto v1 = reinterpret_cast<std::add_pointer_t<Vector>>(entity + g_netvars[hash] + offset);
+			if (v1)
+				*v1 = var;
+		}
+
+		//void set_pnetvar_int(Entity* entity, std::string class_name, std::string var_name, int offset, int var){}
+		//void set_pnetvar_bool(Entity* entity, std::string class_name, std::string var_name, int offset, bool var){}
+		//void set_pnetvar_float(Entity* entity, std::string class_name, std::string var_name, int offset, float var){}
+		//void set_pnetvar_vector(Entity* entity, std::string class_name, std::string var_name, int offset, Vector var){}
+	};
+
+	namespace ns_entity_list {
+		Entity* get_entity(int index) {
+			return g_interfaces.entityList->getEntity(index);
+		}
+		Entity* get_entity_from_handle(int handle) {
+			return g_interfaces.entityList->getEntityFromHandle(handle);
+		}
+		int get_highest_entity_index() {
+			return g_interfaces.entityList->getHighestEntityIndex();
+		}
+	};
+
+	namespace ns_surface {
+		void draw_line(float x0, float y0, float x1, float y1) {
+			g_interfaces.surface->drawLine(x0, y0, x1, y1);
+		}
+		void set_draw_color(int r, int g, int b, int a) {
+			g_interfaces.surface->setDrawColor(r, g, b, a);
+		}
+		void draw_filled_rect(float x0, float y0, float x1, float y1) {
+			g_interfaces.surface->drawFilledRect(x0, y0, x1, y1);
+		}
+		void draw_filled_rect_fade(int x, int y, int x2, int y2, int alpha, int alpha2, bool horizontal) {
+			g_interfaces.surface->drawFilledRectFade(x, y, x2, y2, alpha, alpha2, horizontal);
+		}
+		void draw_outlined_rect(float x0, float y0, float x1, float y1) {
+			g_interfaces.surface->drawOutlinedRect(x0, y0, x1, y1);
+		}
+		void draw_circle(float x, float y, int startRadius, int radius) {
+			g_interfaces.surface->drawCircle(x, y, startRadius, radius);
+		}
+		void draw_outlined_circle(float x, float y, int r, int seg) {
+			g_interfaces.surface->drawOutlinedCircle(x, y, r, seg);
+		}
+		int create_texture() {
+			return g_interfaces.surface->createNewTextureID();
+		}
+		void set_texture(int id) {
+			g_interfaces.surface->drawSetTexture(id);
+		}
+		void set_texture_rgba(int id, const unsigned char* rgba, int w, int h) {
+			g_interfaces.surface->drawSetTextureRGBA(id, rgba, w, h);
+		}
+		void draw_textured_rect(int x, int y, int x2, int y2) {
+			g_interfaces.surface->drawTexturedRect(x, y, x2, y2);
+		}
+		Vector2D get_screen_size() {
+			Vector2D tmp0 = Vector2D();
+			auto tmp1 = g_interfaces.surface->getScreenSize();
+			tmp0.x = tmp1.first;
+			tmp0.y = tmp1.second;
+			return tmp0;
+		}
+		int create_font(std::string fontname, int w, int h, int blur, int flags) {
+			auto f = g_interfaces.surface->createFont();
+			g_interfaces.surface->setFontGlyphSet(f, fontname.c_str(), w, h, blur, 0, flags);
+			return f;
+		}
+		void set_text_font(int font) {
+			g_interfaces.surface->setTextFont(font);
+		}
+		void set_text_color(int r, int g, int b, int a) {
+			g_interfaces.surface->setTextColor(r, g, b, a);
+		}
+		void set_text_pos(int x, int y) {
+			g_interfaces.surface->setTextPosition(x, y);
+		}
+		void draw_text(std::wstring str) {
+			g_interfaces.surface->printText(str.c_str(), str.length());
+		}
+		Vector2D get_text_size(int font, std::wstring text) {
+			Vector2D tmp0 = Vector2D();
+			auto tmp1 = g_interfaces.surface->getTextSize(font, text.c_str());
+			tmp0.x = tmp1.first;
+			tmp0.y = tmp1.second;
+			return tmp0;
+		}
+		void play_sound(std::string fileName) {
+			g_interfaces.surface->playSound(fileName.c_str());
+		}
+	};
+
+	namespace ns_input_system {
+		void enable_input(bool enable) {
+			g_interfaces.inputSystem->enableInput(enable);
+		}
+		bool is_button_down(int buttonCode) {
+			return g_interfaces.inputSystem->isButtonDown(buttonCode);
+		}
+		void reset_input_state() {
+			g_interfaces.inputSystem->resetInputState();
+		}
+		const char* button_code_to_string(int buttonCode) {
+			return g_interfaces.inputSystem->buttonCodeToString(buttonCode);
+		}
+		int virtual_key_to_button_code(int virtualKey) {
+			return g_interfaces.inputSystem->virtualKeyToButtonCode(virtualKey);
+		}
+		const char* virtual_key_to_string(int virtualKey) {
+			return g_interfaces.inputSystem->virtualKeyToString(virtualKey);
+		}
+
+		bool is_key_down(int keycode) {
+			return KEYDOWN(keycode);
+		}
+		bool is_key_up(int keycode) {
+			return KEYUP(keycode);
+		}
+
+		Vector2D get_mouse_position()
+		{
+			POINT mousePosition;
+			GetCursorPos(&mousePosition);
+			ScreenToClient(FindWindow(0, "Counter-Strike: Global Offensive"), &mousePosition);
+			return { static_cast<float>(mousePosition.x), static_cast<float>(mousePosition.y) };
+		}
+
+		bool mouse_in_region(int x, int y, int x2, int y2) {
+			if (get_mouse_position().x > x&& get_mouse_position().y > y&& get_mouse_position().x < x2 + x && get_mouse_position().y < y2 + y)
+				return true;
+			return false;
+		}
+
+	};
+
+	namespace ns_localize {
+		std::wstring find(std::string token) {
+			return g_interfaces.localize->find(token.c_str());
+		}
+	};
+
 	namespace ns_ui {
 		std::string new_checkbox(sol::this_state s, std::string tab, std::string container, std::string label, std::string key, std::optional<bool> def, std::optional<sol::function> cb) {
-			//std::transform(tab.begin(), tab.end(), tab.begin(), ::tolower);
-			//std::transform(container.begin(), container.end(), container.begin(), ::tolower);
-
 			MenuItem_t item;
 			item.type = MENUITEM_CHECKBOX;
 			item.script = extract_owner(s);
@@ -211,9 +601,6 @@ namespace lua {
 		}
 
 		std::string new_slider_int(sol::this_state s, std::string tab, std::string container, std::string label, std::string key, int min, int max, std::optional<std::string> format, std::optional<int> def, std::optional<sol::function> cb) {
-			//std::transform(tab.begin(), tab.end(), tab.begin(), ::tolower);
-			//std::transform(container.begin(), container.end(), container.begin(), ::tolower);
-
 			MenuItem_t item;
 			item.type = MENUITEM_SLIDERINT;
 			item.script = extract_owner(s);
@@ -230,9 +617,6 @@ namespace lua {
 		}
 
 		std::string new_slider_float(sol::this_state s, std::string tab, std::string container, std::string label, std::string key, float min, float max, std::optional<std::string> format, std::optional<float> def, std::optional<sol::function> cb) {
-			//std::transform(tab.begin(), tab.end(), tab.begin(), ::tolower);
-			//std::transform(container.begin(), container.end(), container.begin(), ::tolower);
-
 			MenuItem_t item;
 			item.type = MENUITEM_SLIDERFLOAT;
 			item.script = extract_owner(s);
@@ -249,9 +633,6 @@ namespace lua {
 		}
 
 		std::string new_text(sol::this_state s, std::string tab, std::string container, std::string label, std::string key) {
-			//std::transform(tab.begin(), tab.end(), tab.begin(), ::tolower);
-			//std::transform(container.begin(), container.end(), container.begin(), ::tolower);
-
 			MenuItem_t item;
 			item.type = MENUITEM_TEXT;
 			item.script = extract_owner(s);
@@ -263,9 +644,6 @@ namespace lua {
 		}
 
 		std::string new_colorpicker(sol::this_state s, std::string tab, std::string container, std::string id, std::string key, std::optional<int> r, std::optional<int> g, std::optional<int> b, std::optional<int> a, std::optional<sol::function> cb) {
-			//std::transform(tab.begin(), tab.end(), tab.begin(), ::tolower);
-			//std::transform(container.begin(), container.end(), container.begin(), ::tolower);
-
 			MenuItem_t item;
 			item.type = MENUITEM_COLORPICKER;
 			item.script = extract_owner(s);
@@ -282,9 +660,6 @@ namespace lua {
 		}
 
 		std::string new_button(sol::this_state s, std::string tab, std::string container, std::string id, std::string key, std::optional<sol::function> cb) {
-			//std::transform(tab.begin(), tab.end(), tab.begin(), ::tolower);
-			//std::transform(container.begin(), container.end(), container.begin(), ::tolower);
-
 			MenuItem_t item;
 			item.type = MENUITEM_BUTTON;
 			item.script = extract_owner(s);
@@ -320,17 +695,28 @@ namespace lua {
 
 	};
 
+	namespace ns_game_ui {
+		void message_box(const char* title, const char* text) {
+			g_interfaces.gameUI->messageBox(title, text);
+		}
+	};
+
 	void test_func() {
 		g_console.log("RunTestFunc");
 		for (auto hk : hooks->getHooks("on_test"))
 		{
 			try
 			{
-				hk.func();
+				auto result = hk.func();
+				if (!result.valid()) {
+					sol::error err = result;
+					g_console.log(err.what());
+					g_interfaces.cvar->consoleColorPrintf(CColor(255, 0, 0), err.what());
+				}
 			}
 			catch (const std::exception&)
 			{
-
+				
 			}
 		}
 	}
@@ -347,17 +733,175 @@ namespace lua {
 
 	void init_command() {
 		sol::state_view lua_state(g_lua_state);
-		lua_state["exit"] = []() { g_unload_flag = true; };
 		lua_state["test_func"] = []() { test_func(); };
+		lua_state["exit"] = []() { g_unload_flag = true; };
 
+		lua_state.new_enum("KEYCODES_A",
+			//VK_0 - VK_9 are the same as ASCII '0' - '9' (0x30 - 0x39)
+			"VK_0", VK_0,
+			"VK_1", VK_1,
+			"VK_2", VK_2,
+			"VK_3", VK_3,
+			"VK_4", VK_4,
+			"VK_5", VK_5,
+			"VK_6", VK_6,
+			"VK_7", VK_7,
+			"VK_8", VK_8,
+			"VK_9", VK_9
+		);
+		lua_state.new_enum("KEYCODES_B",
+			//VK_A - VK_Z are the same as ASCII 'A' - 'Z' (0x41 - 0x5A)
+			"VK_A", VK_A,
+			"VK_B", VK_B,
+			"VK_C", VK_C,
+			"VK_D", VK_D,
+			"VK_E", VK_E,
+			"VK_F", VK_F,
+			"VK_G", VK_G,
+			"VK_H", VK_H,
+			"VK_I", VK_I,
+			"VK_J", VK_J,
+			"VK_K", VK_K,
+			"VK_L", VK_L,
+			"VK_M", VK_M,
+			"VK_N", VK_N,
+			"VK_O", VK_O,
+			"VK_P", VK_P,
+			"VK_Q", VK_Q,
+			"VK_R", VK_R,
+			"VK_S", VK_S,
+			"VK_T", VK_T,
+			"VK_U", VK_U,
+			"VK_V", VK_V,
+			"VK_W", VK_W,
+			"VK_X", VK_X,
+			"VK_Y", VK_Y,
+			"VK_Z", VK_Z
+		);
+		lua_state.new_enum("KEYCODES_C",
+			//Other
+			"VK_ESCAPE", VK_ESCAPE,
+			"VK_RETURN", VK_RETURN,
+			"VK_TAB", VK_TAB,
+			"VK_CAPITAL", VK_CAPITAL,
+			"VK_MENU", VK_MENU,
+			"VK_LWIN", VK_LWIN,
+			"VK_RWIN", VK_RWIN,
+			"VK_MENU", VK_MENU,
+			"VK_SHIFT", VK_SHIFT,
+			"VK_LSHIFT", VK_LSHIFT,
+			"VK_RSHIFT", VK_RSHIFT,
+			"VK_SPACE", VK_SPACE,
+			"VK_BACK", VK_BACK,
+			"VK_UP", VK_UP,
+			"VK_DOWN", VK_DOWN,
+			"VK_LEFT", VK_LEFT,
+			"VK_RIGHT", VK_RIGHT,
+			"VK_END", VK_END,
+			"VK_INSERT", VK_INSERT,
+			"VK_HOME", VK_HOME,
+			"VK_PRIOR", VK_PRIOR,
+			"VK_NEXT", VK_NEXT,
+			"VK_DELETE", VK_DELETE,
+			"VK_LBUTTON", VK_LBUTTON,
+			"VK_RBUTTON", VK_RBUTTON,
+			"VK_CANCEL", VK_CANCEL,
+			"VK_MBUTTON", VK_MBUTTON,
+			"VK_DELETE", VK_DELETE
+		);
+		lua_state.new_enum("KEYCODES_D",
+			"VK_F1", VK_F1,
+			"VK_F2", VK_F2,
+			"VK_F3", VK_F3,
+			"VK_F4", VK_F4,
+			"VK_F5", VK_F5,
+			"VK_F6", VK_F6,
+			"VK_F7", VK_F7,
+			"VK_F8", VK_F8,
+			"VK_F9", VK_F9,
+			"VK_F10", VK_F10,
+			"VK_F11", VK_F11,
+			"VK_F12", VK_F12
+		);
+		lua_state.new_enum("KEYCODES_E",
+			"VK_NUMLOCK", VK_NUMLOCK,
+			"VK_NUMPAD0", VK_NUMPAD0,
+			"VK_NUMPAD1", VK_NUMPAD1,
+			"VK_NUMPAD2", VK_NUMPAD2,
+			"VK_NUMPAD3", VK_NUMPAD3,
+			"VK_NUMPAD4", VK_NUMPAD4,
+			"VK_NUMPAD5", VK_NUMPAD5,
+			"VK_NUMPAD6", VK_NUMPAD6,
+			"VK_NUMPAD7", VK_NUMPAD7,
+			"VK_NUMPAD8", VK_NUMPAD8,
+			"VK_NUMPAD9", VK_NUMPAD9,
+			"VK_DECIMAL", VK_DECIMAL,
+			"VK_MULTIPLY", VK_MULTIPLY,
+			"VK_ADD", VK_ADD,
+			"VK_SUBTRACT", VK_SUBTRACT,
+			"VK_DIVIDE", VK_DIVIDE,
+			"VK_PAUSE", VK_PAUSE,
+			"VK_SCROLL", VK_SCROLL
+		);
+		lua_state.new_enum("BUTTONS",
+			"IN_ATTACK", UserCmd::IN_ATTACK,
+			"IN_JUMP", UserCmd::IN_JUMP,
+			"IN_DUCK", UserCmd::IN_DUCK,
+			"IN_FORWARD", UserCmd::IN_FORWARD,
+			"IN_BACK", UserCmd::IN_BACK,
+			"IN_USE", UserCmd::IN_USE,
+			"IN_MOVELEFT", UserCmd::IN_MOVELEFT,
+			"IN_MOVERIGHT", UserCmd::IN_MOVERIGHT,
+			"IN_ATTACK2", UserCmd::IN_ATTACK2,
+			"IN_SCORE", UserCmd::IN_SCORE,
+			"IN_BULLRUSH", UserCmd::IN_BULLRUSH);
+
+		lua_state.new_usertype<Vector2D>("c_vector2d",
+			"x", &Vector2D::x,
+			"y", &Vector2D::y
+			);
+
+		lua_state.new_usertype<Vector>("c_vector",
+			"x", &Vector::x,
+			"y", &Vector::y,
+			"z", &Vector::z
+			);
+
+		lua_state.new_usertype<CColor>("c_color",
+			sol::constructors<CColor(), CColor(int, int, int), CColor(int, int, int, int)>(),
+			"r", &CColor::r,
+			"g", &CColor::g,
+			"b", &CColor::b,
+			"a", &CColor::a
+			);
+
+
+		lua_state.new_usertype<UserCmd>("c_usercmd",
+			"command_number", sol::readonly(&UserCmd::commandNumber),
+			"tick_count", sol::readonly(&UserCmd::tickCount),
+			"viewangles", &UserCmd::viewangles,
+			"aimdirection", &UserCmd::aimdirection,
+			"forwardmove", &UserCmd::forwardmove,
+			"sidemove", &UserCmd::sidemove,
+			"upmove", &UserCmd::upmove,
+			"buttons", &UserCmd::buttons,
+			"impulse", sol::readonly(&UserCmd::impulse),
+			"weaponselect", &UserCmd::weaponselect,
+			"weaponsubtype", sol::readonly(&UserCmd::weaponsubtype),
+			"random_seed", sol::readonly(&UserCmd::randomSeed),
+			"mousedx", &UserCmd::mousedx,
+			"mousedy", &UserCmd::mousedy,
+			"hasbeenpredicted", sol::readonly(&UserCmd::hasbeenpredicted)
+			);
+		
 		auto config = lua_state.create_table();
 		config["get"] = ns_config::get;
 		config["set"] = sol::overload(
-			ns_config::set_bool, 
-			ns_config::set_color, 
-			ns_config::set_float, 
-			ns_config::set_string, 
-			ns_config::set_select_tuple, 
+			ns_config::set_bool,
+			ns_config::set_color,
+			ns_config::set_float,
+			ns_config::set_string,
+			ns_config::set_select_tuple,
 			ns_config::set_number_tuple,
 			ns_config::set_string_tuple,
 			ns_config::set_select_map,
@@ -367,6 +911,7 @@ namespace lua {
 		config["save"] = ns_config::save;
 		config["load"] = ns_config::load;
 		lua_state["config"] = config;
+		
 
 		auto client = lua_state.create_table();
 		client["set_event_callback"] = ns_client::set_event_callback;
@@ -374,6 +919,134 @@ namespace lua {
 		client["reload_active_scripts"] = ns_client::reload_active_scripts;
 		client["refresh"] = ns_client::refresh;
 		lua_state["client"] = client;
+
+		auto engine = lua_state.create_table();
+		engine["client_cmd"] = ns_engine::client_cmd;
+		engine["client_cmd_unrestricted"] = ns_engine::client_cmd_unrestricted;
+		engine["execute_client_cmd"] = ns_engine::execute_client_cmd;
+		engine["get_local_player_index"] = ns_engine::get_local_player_index;
+		engine["get_max_clients"] = ns_engine::get_max_clients;
+		engine["get_player_for_user_id"] = ns_engine::get_player_for_user_id;
+		engine["get_player_info"] = ns_engine::get_player_info;
+		engine["get_view_angles"] = ns_engine::get_view_angles;
+		engine["is_connected"] = ns_engine::is_connected;
+		engine["is_in_game"] = ns_engine::is_in_game;
+		engine["set_view_angles"] = ns_engine::set_view_angles;
+		lua_state["engine"] = engine;
+		
+
+		auto entity = lua_state.create_table();
+		entity["is_pistol"] = ns_entity::is_pistol;
+		entity["is_sniper_rifle"] = ns_entity::is_sniper_rifle;
+		entity["get_bone_position"] = ns_entity::get_bone_position;
+		entity["get_eye_position"] = ns_entity::get_eye_position;
+		entity["is_visible_none"] = ns_entity::is_visible_none;
+		entity["is_visible_position"] = ns_entity::is_visible_position;
+		entity["is_enemy"] = ns_entity::is_enemy;
+		entity["is_dormant"] = ns_entity::is_dormant;
+		entity["is_weapon"] = ns_entity::is_weapon;
+		entity["is_alive"] = ns_entity::is_alive;
+		entity["is_player"] = ns_entity::is_player;
+		entity["get_active_weapon"] = ns_entity::get_active_weapon;
+		entity["get_weapon_sub_type"] = ns_entity::get_weapon_sub_type;
+		//entity["get_weapon_data"] = ns_entity::get_weapon_data;
+		entity["get_inaccuracy"] = ns_entity::get_inaccuracy;
+		entity["get_abs_origin"] = ns_entity::get_abs_origin;
+		entity["get_animstate"] = ns_entity::get_animstate;
+		entity["get_max_desync_angle"] = ns_entity::get_max_desync_angle;
+		entity["is_in_reload"] = ns_entity::is_in_reload;
+		entity["get_aim_punch"] = ns_entity::get_aim_punch;
+		//
+		entity["get_health"] = ns_entity::get_health;
+		entity["get_body"] = ns_entity::get_body;
+		entity["get_hitboxSet"] = ns_entity::get_hitboxSet;
+		entity["get_origin"] = ns_entity::get_origin;
+		entity["get_crosshairId"] = ns_entity::get_crosshairId;
+		entity["get_aim_punch_angle"] = ns_entity::get_aim_punch_angle;
+		//
+		//entity["get_netvar_offset"] = ns_entity::get_netvar_offset;
+		//entity["get_pnetvar_offset"] = ns_entity::get_pnetvar_offset;
+		//
+		entity["get_netvar_int"] = ns_entity::get_netvar_int;
+		entity["get_netvar_bool"] = ns_entity::get_netvar_bool;
+		entity["get_netvar_float"] = ns_entity::get_netvar_float;
+		entity["get_netvar_vector"] = ns_entity::get_netvar_vector;
+		entity["get_prop"] = ns_entity::get_netvar_offset;
+
+		entity["set_netvar_int"] = ns_entity::set_netvar_int;
+		entity["set_netvar_bool"] = ns_entity::set_netvar_bool;
+		entity["set_netvar_float"] = ns_entity::set_netvar_float;
+		entity["set_netvar_vector"] = ns_entity::set_netvar_vector;
+		
+		entity["set_prop"] = sol::overload(
+			ns_entity::set_netvar_int,
+			ns_entity::set_netvar_bool,
+			ns_entity::set_netvar_float,
+			ns_entity::set_netvar_vector
+		);
+		lua_state["entity"] = entity;
+		
+
+		auto entity_list = lua_state.create_table();
+		entity_list["get_entity"] = ns_entity_list::get_entity;
+		entity_list["get_entity_from_handle"] = ns_entity_list::get_entity_from_handle;
+		entity_list["get_highest_entity_index"] = ns_entity_list::get_highest_entity_index;
+		lua_state["entity_list"] = entity_list;
+
+		auto cvar = lua_state.create_table();
+		cvar["find_var"] = ns_cvar::find_var;
+		cvar["console_printf"] = ns_cvar::console_printf;
+		cvar["console_color_printf"] = ns_cvar::console_color_printf;
+		lua_state["cvar"] = cvar;
+		
+
+		auto convar = lua_state.create_table();
+		convar["get_int"] = ns_convar::get_int;
+		convar["set_int"] = ns_convar::set_int;
+		convar["get_float"] = ns_convar::get_float;
+		convar["set_float"] = ns_convar::set_float;
+		convar["set_char"] = ns_convar::set_char;
+		lua_state["convar"] = convar;
+		
+
+		auto surface = lua_state.create_table();
+		surface["draw_line"] = ns_surface::draw_line;
+		surface["set_draw_color"] = ns_surface::set_draw_color;
+		surface["draw_filled_rect"] = ns_surface::draw_filled_rect;
+		surface["draw_filled_rect_fade"] = ns_surface::draw_filled_rect_fade;
+		surface["draw_outlined_rect"] = ns_surface::draw_outlined_rect;
+		surface["draw_circle"] = ns_surface::draw_circle;
+		surface["draw_outlined_circle"] = ns_surface::draw_outlined_circle;
+		surface["create_texture"] = ns_surface::create_texture;
+		surface["set_texture"] = ns_surface::set_texture;
+		surface["set_texture_rgba"] = ns_surface::set_texture_rgba;
+		surface["draw_textured_rect"] = ns_surface::draw_textured_rect;
+		surface["get_screen_size"] = ns_surface::get_screen_size;
+		surface["create_font"] = ns_surface::create_font;
+		surface["set_text_font"] = ns_surface::set_text_font;
+		surface["set_text_color"] = ns_surface::set_text_color;
+		surface["set_text_pos"] = ns_surface::set_text_pos;
+		surface["draw_text"] = ns_surface::draw_text;
+		surface["get_text_size"] = ns_surface::get_text_size;
+		surface["play_sound"] = ns_surface::play_sound;
+		lua_state["surface"] = surface;
+
+		auto input_system = lua_state.create_table();
+		input_system["enable_input"] = ns_input_system::enable_input;
+		input_system["is_button_down"] = ns_input_system::is_button_down;
+		input_system["reset_input_state"] = ns_input_system::reset_input_state;
+		input_system["button_code_to_string"] = ns_input_system::button_code_to_string;
+		input_system["virtual_key_to_button_code"] = ns_input_system::virtual_key_to_button_code;
+		input_system["virtual_key_to_string"] = ns_input_system::virtual_key_to_string;
+		input_system["get_mouse_position"] = ns_input_system::get_mouse_position;
+		input_system["mouse_in_region"] = ns_input_system::mouse_in_region;
+		input_system["is_key_down"] = ns_input_system::is_key_down;
+		input_system["is_key_up"] = ns_input_system::is_key_up;
+		lua_state["input_system"] = input_system;
+
+		auto localize = lua_state.create_table();
+		localize["find"] = ns_localize::find;
+		lua_state["localize"] = localize;
 
 		auto ui = lua_state.create_table();
 		ui["new_checkbox"] = ns_ui::new_checkbox;
@@ -391,6 +1064,10 @@ namespace lua {
 		ui["set_visibility"] = ns_ui::set_visibility;
 		//ui["is_bind_active"] = ns_ui::is_bind_active;
 		lua_state["ui"] = ui;
+
+		auto game_ui = lua_state.create_table();
+		game_ui["message_box"] = ns_game_ui::message_box;
+		lua_state["game_ui"] = game_ui;
 
 		refresh_scripts();
 		load_script(get_script_id("autorun.lua"));
@@ -442,16 +1119,16 @@ namespace lua {
 			return;
 
 		sol::state_view state(g_lua_state);
-		state.script_file(path, [](lua_State*, sol::protected_function_result result) {
+		state.script_file(path, [](lua_State* me, sol::protected_function_result result) {
 			if (!result.valid()) {
 				sol::error err = result;
 				//Utilities->Game_Msg(err.what());
 				g_console.log(err.what());
+				//printf("%s\n", err.what());
 			}
 
 			return result;
 			});
-
 		loaded.at(id) = true;
 	}
 
@@ -518,9 +1195,9 @@ namespace lua {
 				auto filename = path.filename().string();
 
 				bool didPut = false;
-				int oldScriptsSize = 0; 
+				int oldScriptsSize = 0;
 				oldScriptsSize = oldScripts.size();
-				if (oldScriptsSize <= 0)
+				if (oldScriptsSize < 0)
 					continue;
 
 				for (int i = 0; i < oldScriptsSize; i++) {
@@ -577,4 +1254,28 @@ namespace lua {
 
 		return pathes.at(id).string();
 	}
+
+	void c_lua_hookManager::registerHook(std::string eventName, int scriptId, sol::protected_function func) {
+		c_lua_hook hk = { scriptId, func };
+
+		this->hooks[eventName].push_back(hk);
+	}
+
+	void c_lua_hookManager::unregisterHooks(int scriptId) {
+		for (auto& ev : this->hooks) {
+			int pos = 0;
+
+			for (auto& hk : ev.second) {
+				if (hk.scriptId == scriptId)
+					ev.second.erase(ev.second.begin() + pos);
+
+				pos++;
+			}
+		}
+	}
+
+	std::vector<c_lua_hook> c_lua_hookManager::getHooks(std::string eventName) {
+		return this->hooks[eventName];
+	}
 };
+

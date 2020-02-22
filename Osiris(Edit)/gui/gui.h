@@ -12,10 +12,12 @@ private:
 	//void updateColors() const noexcept;
 	void renderMenuBar() noexcept;
 	//void renderMiscWindow() noexcept;
-	void renderConfigWindow() noexcept;
+	//void renderConfigWindow() noexcept;
 	//void renderSkinChangerWindow() noexcept;
-	void renderLuaWindow() noexcept;
-
+	//void renderLuaWindow() noexcept;
+	//void renderConsoleWindow() noexcept;
+	//void renderLuaItems() noexcept;
+	void renderLuaItemsWindow() noexcept;
 	//struct {
 		//bool misc{ false };
 		//bool config{ false };

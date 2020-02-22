@@ -1,7 +1,8 @@
 ﻿#include <Windows.h>
 #include <thread>
 #include "utils/KeyState.h"
-#include "lua/includes.h"
+//#include "lua/includes.h"
+#include "lua/Clua.h"
 #include "utils/console/console.h"
 #include "config/config.h"
 #include "gui/gui.h"
@@ -22,6 +23,7 @@ void init() {
 	_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_WNDW);
 
 #else
+	g_console.allocate();
 #endif
 
 	lua::init_state();
@@ -44,7 +46,11 @@ void load() {
 	{
 		try
 		{
-			hk.func();
+			auto result = hk.func();
+			if (!result.valid()) {
+				sol::error err = result;
+				g_console.log(err.what());
+			}
 		}
 		catch (const std::exception&)
 		{
@@ -61,7 +67,11 @@ void unload() {
 	{
 		try
 		{
-			hk.func();
+			auto result = hk.func();
+			if (!result.valid()) {
+				sol::error err = result;
+				g_console.log(err.what());
+			}
 		}
 		catch (const std::exception&)
 		{
