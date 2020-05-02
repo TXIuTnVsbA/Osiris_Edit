@@ -2,6 +2,7 @@
 
 #include <cmath>
 #include <cstdint>
+#include <tuple>
 #define M_PI       3.14159265358979323846   // pi
 template<typename T, typename ...Args>
 constexpr auto callVirtualMethod(void* classBase, int index, Args... args) noexcept

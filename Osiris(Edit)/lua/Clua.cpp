@@ -215,12 +215,12 @@ namespace lua {
 		ConVar* find_var(std::string name) {
 			return g_interfaces.cvar->findVar(name.c_str());
 		}
-		void console_color_printf(CColor color,std::string v) {
-			g_interfaces.cvar->consoleColorPrintf(color,v.c_str());
+		void console_color_printf(CColor color, std::string v) {
+			g_interfaces.cvar->consoleColorPrintf(color, v.c_str());
 		}
 		void console_printf(std::string v) {
 			CColor color{};
-			g_interfaces.cvar->consoleColorPrintf(color,v.c_str());
+			g_interfaces.cvar->consoleColorPrintf(color, v.c_str());
 		}
 	};
 
@@ -376,7 +376,7 @@ namespace lua {
 			return entity->aimPunchAngle();
 		}
 
-		
+
 		sol::object get_netvar_offset(sol::this_state s, Entity* entity, std::string class_name, std::string var_name, int offset) {
 			auto hash = fnv::hash((class_name + "->" + var_name).c_str());
 			Vector v4 = *reinterpret_cast<std::add_pointer_t<Vector>>(entity + g_netvars[hash] + offset);
@@ -407,7 +407,7 @@ namespace lua {
 		{
 			auto hash = fnv::hash((class_name + "->" + var_name).c_str());
 			return *reinterpret_cast<std::add_pointer_t<bool>>(entity + g_netvars[hash] + offset);
-		
+
 		}
 		float get_netvar_float(Entity* entity, std::string class_name, std::string var_name, int offset)
 		{
@@ -716,7 +716,7 @@ namespace lua {
 			}
 			catch (const std::exception&)
 			{
-				
+
 			}
 		}
 	}
@@ -893,7 +893,7 @@ namespace lua {
 			"mousedy", &UserCmd::mousedy,
 			"hasbeenpredicted", sol::readonly(&UserCmd::hasbeenpredicted)
 			);
-		
+
 		auto config = lua_state.create_table();
 		config["get"] = ns_config::get;
 		config["set"] = sol::overload(
@@ -911,7 +911,7 @@ namespace lua {
 		config["save"] = ns_config::save;
 		config["load"] = ns_config::load;
 		lua_state["config"] = config;
-		
+
 
 		auto client = lua_state.create_table();
 		client["set_event_callback"] = ns_client::set_event_callback;
@@ -933,7 +933,7 @@ namespace lua {
 		engine["is_in_game"] = ns_engine::is_in_game;
 		engine["set_view_angles"] = ns_engine::set_view_angles;
 		lua_state["engine"] = engine;
-		
+
 
 		auto entity = lua_state.create_table();
 		entity["is_pistol"] = ns_entity::is_pistol;
@@ -977,7 +977,7 @@ namespace lua {
 		entity["set_netvar_bool"] = ns_entity::set_netvar_bool;
 		entity["set_netvar_float"] = ns_entity::set_netvar_float;
 		entity["set_netvar_vector"] = ns_entity::set_netvar_vector;
-		
+
 		entity["set_prop"] = sol::overload(
 			ns_entity::set_netvar_int,
 			ns_entity::set_netvar_bool,
@@ -985,7 +985,7 @@ namespace lua {
 			ns_entity::set_netvar_vector
 		);
 		lua_state["entity"] = entity;
-		
+
 
 		auto entity_list = lua_state.create_table();
 		entity_list["get_entity"] = ns_entity_list::get_entity;
@@ -998,7 +998,7 @@ namespace lua {
 		cvar["console_printf"] = ns_cvar::console_printf;
 		cvar["console_color_printf"] = ns_cvar::console_color_printf;
 		lua_state["cvar"] = cvar;
-		
+
 
 		auto convar = lua_state.create_table();
 		convar["get_int"] = ns_convar::get_int;
@@ -1007,7 +1007,7 @@ namespace lua {
 		convar["set_float"] = ns_convar::set_float;
 		convar["set_char"] = ns_convar::set_char;
 		lua_state["convar"] = convar;
-		
+
 
 		auto surface = lua_state.create_table();
 		surface["draw_line"] = ns_surface::draw_line;

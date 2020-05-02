@@ -134,8 +134,8 @@ public:
 
         for (int i = startRadius; i <= radius; ++i) {
             for (int j = 0; j < 12; ++j) {
-                xs[j] = static_cast<int>(std::cos(degreesToRadians(static_cast<float>(j * 30))) * i + x);
-                ys[j] = static_cast<int>(std::sin(degreesToRadians(static_cast<float>(j * 30))) * i + y);
+                xs[j] = static_cast<int>(std::cos(degreesToRadians(static_cast<float>(j * 30)))* i + x);
+                ys[j] = static_cast<int>(std::sin(degreesToRadians(static_cast<float>(j * 30)))* i + y);
             }
             g_interfaces.surface->drawPolyLine(xs, ys, 12);
         }

@@ -23,6 +23,7 @@ class ResourceAccessControl;
 class Surface;
 class Sound;
 class SoundEmitter;
+class StudioRender;
 class c_interfaces {
 public:
     void init() noexcept;
@@ -47,6 +48,7 @@ public:
     Surface* surface;
     Sound* sound;
     SoundEmitter* soundEmitter;
+    StudioRender* studioRender;
 public:
     template <typename T>
     static auto find(const wchar_t* module, const char* name) noexcept

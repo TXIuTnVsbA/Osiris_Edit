@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Utils.h"
+#include "VirtualMethod.h"
 
 struct ConVar;
 struct c_console_color
@@ -53,15 +53,12 @@ public:
 		return col / 255.f;
 	}
 };
+
 class Cvar {
 protected:
 	~Cvar() = default;
 public:
-    constexpr auto findVar(const char* name) noexcept
-    {
-        return callVirtualMethod<ConVar*, const char*>(this, 15, name);
-    }
-
+	VIRTUAL_METHOD(ConVar*, findVar, 15, (const char* name), (this, name));
 	template <typename... args>
 	void consoleColorPrintf(const CColor& color, const char* format, args... arg) {
 		const c_console_color cl = { static_cast<unsigned char>(color.r()), static_cast<unsigned char>(color.g()),

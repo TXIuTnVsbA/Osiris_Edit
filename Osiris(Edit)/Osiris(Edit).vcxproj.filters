@@ -88,9 +88,6 @@
     <ClCompile Include="gui\imgui\imgui_widgets.cpp">
       <Filter>源文件\gui\imgui</Filter>
     </ClCompile>
-    <ClCompile Include="sdk\interfaces\GlobalVars.cpp">
-      <Filter>源文件\sdk\interfaces</Filter>
-    </ClCompile>
     <ClCompile Include="sdk\utils\interfaces\interfaces.cpp">
       <Filter>源文件\sdk\utils\interfaces</Filter>
     </ClCompile>
@@ -108,6 +105,12 @@
     </ClCompile>
     <ClCompile Include="utils\json\jsoncpp.cpp">
       <Filter>源文件\utils\json</Filter>
+    </ClCompile>
+    <ClCompile Include="sdk\interfaces\GlobalVars.cpp">
+      <Filter>源文件\sdk\interfaces</Filter>
+    </ClCompile>
+    <ClCompile Include="sdk\interfaces\KeyValues.cpp">
+      <Filter>源文件\sdk\interfaces</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -158,6 +161,24 @@
     </ClInclude>
     <ClInclude Include="gui\imgui\imstb_truetype.h">
       <Filter>源文件\gui\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="sdk\utils\interfaces\interfaces.h">
+      <Filter>源文件\sdk\utils\interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="sdk\utils\memory\memory.h">
+      <Filter>源文件\sdk\utils\memory</Filter>
+    </ClInclude>
+    <ClInclude Include="sdk\utils\netvars\netvars.h">
+      <Filter>源文件\sdk\utils\netvars</Filter>
+    </ClInclude>
+    <ClInclude Include="sdk\utils\hooks\hooks.h">
+      <Filter>源文件\sdk\utils\hooks</Filter>
+    </ClInclude>
+    <ClInclude Include="sdk\utils\netvars\fnv.h">
+      <Filter>源文件\sdk\utils\netvars</Filter>
+    </ClInclude>
+    <ClInclude Include="gui\gui.h">
+      <Filter>源文件\gui</Filter>
     </ClInclude>
     <ClInclude Include="sdk\interfaces\AnimState.h">
       <Filter>源文件\sdk\interfaces</Filter>
@@ -216,7 +237,13 @@
     <ClInclude Include="sdk\interfaces\ItemSchema.h">
       <Filter>源文件\sdk\interfaces</Filter>
     </ClInclude>
+    <ClInclude Include="sdk\interfaces\KeyValues.h">
+      <Filter>源文件\sdk\interfaces</Filter>
+    </ClInclude>
     <ClInclude Include="sdk\interfaces\Localize.h">
+      <Filter>源文件\sdk\interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="sdk\interfaces\LocalPlayer.h">
       <Filter>源文件\sdk\interfaces</Filter>
     </ClInclude>
     <ClInclude Include="sdk\interfaces\Material.h">
@@ -240,6 +267,9 @@
     <ClInclude Include="sdk\interfaces\NetworkChannel.h">
       <Filter>源文件\sdk\interfaces</Filter>
     </ClInclude>
+    <ClInclude Include="sdk\interfaces\Pad.h">
+      <Filter>源文件\sdk\interfaces</Filter>
+    </ClInclude>
     <ClInclude Include="sdk\interfaces\Panel.h">
       <Filter>源文件\sdk\interfaces</Filter>
     </ClInclude>
@@ -258,13 +288,13 @@
     <ClInclude Include="sdk\interfaces\RenderView.h">
       <Filter>源文件\sdk\interfaces</Filter>
     </ClInclude>
-    <ClInclude Include="sdk\interfaces\ResourceAccessControl.h">
-      <Filter>源文件\sdk\interfaces</Filter>
-    </ClInclude>
     <ClInclude Include="sdk\interfaces\SoundEmitter.h">
       <Filter>源文件\sdk\interfaces</Filter>
     </ClInclude>
     <ClInclude Include="sdk\interfaces\SoundInfo.h">
+      <Filter>源文件\sdk\interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="sdk\interfaces\StudioRender.h">
       <Filter>源文件\sdk\interfaces</Filter>
     </ClInclude>
     <ClInclude Include="sdk\interfaces\Surface.h">
@@ -285,29 +315,14 @@
     <ClInclude Include="sdk\interfaces\Vector.h">
       <Filter>源文件\sdk\interfaces</Filter>
     </ClInclude>
+    <ClInclude Include="sdk\interfaces\VirtualMethod.h">
+      <Filter>源文件\sdk\interfaces</Filter>
+    </ClInclude>
     <ClInclude Include="sdk\interfaces\WeaponData.h">
       <Filter>源文件\sdk\interfaces</Filter>
     </ClInclude>
     <ClInclude Include="sdk\interfaces\WeaponId.h">
       <Filter>源文件\sdk\interfaces</Filter>
-    </ClInclude>
-    <ClInclude Include="sdk\utils\interfaces\interfaces.h">
-      <Filter>源文件\sdk\utils\interfaces</Filter>
-    </ClInclude>
-    <ClInclude Include="sdk\utils\memory\memory.h">
-      <Filter>源文件\sdk\utils\memory</Filter>
-    </ClInclude>
-    <ClInclude Include="sdk\utils\netvars\netvars.h">
-      <Filter>源文件\sdk\utils\netvars</Filter>
-    </ClInclude>
-    <ClInclude Include="sdk\utils\hooks\hooks.h">
-      <Filter>源文件\sdk\utils\hooks</Filter>
-    </ClInclude>
-    <ClInclude Include="sdk\utils\netvars\fnv.h">
-      <Filter>源文件\sdk\utils\netvars</Filter>
-    </ClInclude>
-    <ClInclude Include="gui\gui.h">
-      <Filter>源文件\gui</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

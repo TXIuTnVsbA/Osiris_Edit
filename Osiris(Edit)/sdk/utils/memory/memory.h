@@ -9,6 +9,7 @@ class ClientMode;
 class Entity;
 class Input;
 class ItemSchema;
+class KeyValues;
 class MoveHelper;
 class MoveData;
 class ViewRender;
@@ -57,11 +58,16 @@ public:
     uintptr_t test2;
     uint8_t* fakePrime;
     std::add_pointer_t<void __cdecl(const char* msg, ...)> debugMsg;
+    std::add_pointer_t<void __cdecl(const std::array<std::uint8_t, 4> & color, const char* msg, ...)> conColorMsg;
     float* vignette;
     int(__thiscall* equipWearable)(void* wearable, void* player);
     int* predictionRandomSeed;
     MoveData* moveData;
     MoveHelper* moveHelper;
+    std::uintptr_t keyValuesFromString;
+    KeyValues* (__thiscall* keyValuesFindKey)(KeyValues* keyValues, const char* keyName, bool create);
+    void(__thiscall* keyValuesSetString)(KeyValues* keyValues, const char* value);
+
 public:
     static std::uintptr_t findPattern(const wchar_t* module, const char* pattern, size_t offset = 0) noexcept
     {

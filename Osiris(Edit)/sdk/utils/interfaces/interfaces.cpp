@@ -1,25 +1,29 @@
 #include "interfaces.h"
+
+#define GAME_INTERFACE(type, name, module, version) \
+name = find<type>(L##module, version);
+
 c_interfaces g_interfaces;
 void c_interfaces::init() noexcept {
-    client = find<Client>(L"client_panorama", "VClient018");
-    cvar = find<Cvar>(L"vstdlib", "VEngineCvar007");
-    engine = find<Engine>(L"engine", "VEngineClient014");
-    engineTrace = find<EngineTrace>(L"engine", "EngineTraceClient004");
-    entityList = find<EntityList>(L"client_panorama", "VClientEntityList003");;
-    gameEventManager = find<GameEventManager>(L"engine", "GAMEEVENTSMANAGER002");
-    gameMovement = find<GameMovement>(L"client_panorama", "GameMovement001");
-    gameUI = find<GameUI>(L"client_panorama", "GameUI011");
-    inputSystem = find<InputSystem>(L"inputsystem", "InputSystemVersion001");
-    localize = find<Localize>(L"localize", "Localize_001");
-    materialSystem = find<MaterialSystem>(L"materialsystem", "VMaterialSystem080");
-    modelInfo = find<ModelInfo>(L"engine", "VModelInfoClient004");
-    modelRender = find<ModelRender>(L"engine", "VEngineModel016");
-    panel = find<Panel>(L"vgui2", "VGUI_Panel009");
-    physicsSurfaceProps = find<PhysicsSurfaceProps>(L"vphysics", "VPhysicsSurfaceProps001");
-    prediction = find<Prediction>(L"client_panorama", "VClientPrediction001");
-    renderView = find<RenderView>(L"engine", "VEngineRenderView014");
-    resourceAccessControl = find<ResourceAccessControl>(L"datacache", "VResourceAccessControl001");
-    surface = find<Surface>(L"vguimatsurface", "VGUI_Surface031");
-    sound = find<Sound>(L"engine", "IEngineSoundClient003");
-    soundEmitter = find<SoundEmitter>(L"soundemittersystem", "VSoundEmitter003");
+    GAME_INTERFACE(Client, client, "client_panorama", "VClient018");
+    GAME_INTERFACE(Cvar, cvar, "vstdlib", "VEngineCvar007");
+    GAME_INTERFACE(Engine, engine, "engine", "VEngineClient014");
+    GAME_INTERFACE(EngineTrace, engineTrace, "engine", "EngineTraceClient004");
+    GAME_INTERFACE(EntityList, entityList, "client_panorama", "VClientEntityList003");
+    GAME_INTERFACE(GameEventManager, gameEventManager, "engine", "GAMEEVENTSMANAGER002");
+    GAME_INTERFACE(GameMovement, gameMovement, "client_panorama", "GameMovement001");
+    GAME_INTERFACE(GameUI, gameUI, "client_panorama", "GameUI011");
+    GAME_INTERFACE(InputSystem, inputSystem, "inputsystem", "InputSystemVersion001");
+    GAME_INTERFACE(Localize, localize, "localize", "Localize_001");
+    GAME_INTERFACE(MaterialSystem, materialSystem, "materialsystem", "VMaterialSystem080");
+    GAME_INTERFACE(ModelInfo, modelInfo, "engine", "VModelInfoClient004");
+    GAME_INTERFACE(ModelRender, modelRender, "engine", "VEngineModel016");
+    GAME_INTERFACE(Panel, panel, "vgui2", "VGUI_Panel009");
+    GAME_INTERFACE(PhysicsSurfaceProps, physicsSurfaceProps, "vphysics", "VPhysicsSurfaceProps001");
+    GAME_INTERFACE(Prediction, prediction, "client_panorama", "VClientPrediction001");
+    GAME_INTERFACE(RenderView, renderView, "engine", "VEngineRenderView014");
+    GAME_INTERFACE(Surface, surface, "vguimatsurface", "VGUI_Surface031");
+    GAME_INTERFACE(Sound, sound, "engine", "IEngineSoundClient003");
+    GAME_INTERFACE(SoundEmitter, soundEmitter, "soundemittersystem", "VSoundEmitter003");
+    GAME_INTERFACE(StudioRender, studioRender, "studiorender", "VStudioRender026");
 }

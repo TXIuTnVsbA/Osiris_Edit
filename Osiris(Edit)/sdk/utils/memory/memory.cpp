@@ -1,5 +1,6 @@
 #include "../interfaces/interfaces.h"
 #include "memory.h"
+#include "../../interfaces/LocalPlayer.h"
 
 #define FIND_PATTERN(type, ...) \
 reinterpret_cast<type>(findPattern(__VA_ARGS__))
@@ -39,9 +40,15 @@ void c_memory::init() noexcept {
     test2 = findPattern(L"client_panorama", "\x85\xC0\x0F\x84????\x80\x78\x10\x00\x0F\x84");
     fakePrime = FIND_PATTERN(std::uint8_t*, L"client_panorama", "\x17\xF6\x40\x14\x10") - 1;
     debugMsg = reinterpret_cast<decltype(debugMsg)>(GetProcAddress(GetModuleHandleW(L"tier0"), "Msg"));
+    conColorMsg = reinterpret_cast<decltype(conColorMsg)>(GetProcAddress(GetModuleHandleW(L"tier0"), "?ConColorMsg@@YAXABVColor@@PBDZZ"));
     vignette = *FIND_PATTERN(float**, L"client_panorama", "\x0F\x11\x05????\xF3\x0F\x7E\x87", 3) + 1;
     equipWearable = FIND_PATTERN(decltype(equipWearable), L"client_panorama", "\x55\x8B\xEC\x83\xEC\x10\x53\x8B\x5D\x08\x57\x8B\xF9");
     predictionRandomSeed = *FIND_PATTERN(int**, L"client_panorama", "\x8B\x0D????\xBA????\xE8????\x83\xC4\x04", 2);
     moveData = **FIND_PATTERN(MoveData***, L"client_panorama", "\xA1????\xF3\x0F\x59\xCD", 1);
     moveHelper = **FIND_PATTERN(MoveHelper***, L"client_panorama", "\x8B\x0D????\x8B\x45?\x51\x8B\xD4\x89\x02\x8B\x01", 2);
+    keyValuesFromString = relativeToAbsolute<decltype(keyValuesFromString)>(FIND_PATTERN(int*, L"client_panorama", "\xE8????\x83\xC4\x04\x89\x45\xD8", 1));
+    keyValuesFindKey = relativeToAbsolute<decltype(keyValuesFindKey)>(FIND_PATTERN(int*, L"client_panorama", "\xE8????\xF7\x45", 1));
+    keyValuesSetString = relativeToAbsolute<decltype(keyValuesSetString)>(FIND_PATTERN(int*, L"client_panorama", "\xE8????\x89\x77\x38", 1));
+
+    localPlayer.init(*reinterpret_cast<Entity***>(findPattern(L"client_panorama", "\xA1????\x89\x45\xBC\x85\xC0", 1)));
 }

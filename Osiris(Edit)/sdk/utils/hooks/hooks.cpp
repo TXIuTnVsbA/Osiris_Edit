@@ -29,7 +29,6 @@
 #include "../../interfaces/ModelRender.h"
 #include "../../interfaces/Panel.h"
 #include "../../interfaces/RenderContext.h"
-#include "../../interfaces/ResourceAccessControl.h"
 #include "../../interfaces/SoundInfo.h"
 #include "../../interfaces/SoundEmitter.h"
 #include "../../interfaces/Surface.h"
