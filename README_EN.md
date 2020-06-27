@@ -4,7 +4,7 @@ Osiris_Edit = Osiris + Lua
 
 Source:https://github.com/danielkrupinski/Osiris
 
-Goal：
+Goals：
 
 		Re-write SDK, completed
 		
